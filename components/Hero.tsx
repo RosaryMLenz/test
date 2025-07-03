@@ -1,15 +1,17 @@
-'use client';
-
+"use client";
 import React from 'react';
-import Link from 'next/link';
 
-const Hero = () => {
+interface HeroProps {
+    onBookClick: () => void;
+}
+
+const Hero = ({ onBookClick }: HeroProps) => {
     return (
         <section className="relative bg-black text-white flex items-center justify-center min-h-[80vh] px-6 sm:px-8">
-            {/* Background Image Overlay (optional, can be replaced with Tailwind bg) */}
+            {/* Background Image Overlay */}
             <div
                 className="absolute inset-0 bg-cover bg-center opacity-20"
-                style={{ backgroundImage: "url('/mechanic-hero.jpg')" }} // replace with your image in /public
+                style={{ backgroundImage: "url('/mechanic-hero.jpg')" }}
             ></div>
 
             {/* Overlay */}
@@ -25,12 +27,12 @@ const Hero = () => {
                     today for honest, fast, and affordable care.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
-                    <Link
-                        href="/booking"
+                    <button
+                        onClick={onBookClick}
                         className="bg-green-500 hover:bg-green-600 text-black font-semibold px-6 py-3 rounded transition"
                     >
                         Book Appointment
-                    </Link>
+                    </button>
                     <a
                         href="tel:+17028349385"
                         className="border border-green-500 text-green-500 hover:bg-green-500 hover:text-black font-semibold px-6 py-3 rounded transition"

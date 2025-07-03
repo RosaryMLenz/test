@@ -1,11 +1,21 @@
-import Hero from "@/components/Hero";
+"use client";
+
+import { useState } from 'react';
+import Hero from '@/components/Hero';
+import BookingModal from '@/components/BookingModal/BookingModal';
 
 export default function Home() {
-  return (
-      <main className="relative bg-black-100 flex justify-center items-center flex-col mx-auto sm:px-10 px-5 overflow-clip">
-        <div className="max-w-7xl w-full">
-          <Hero />
-        </div>
-      </main>
-  );
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    return (
+        <>
+            <Hero onBookClick={() => setIsModalOpen(true)} />
+            {/* other sections */}
+
+            <BookingModal
+                isOpen={isModalOpen}
+                onCloseAction={() => setIsModalOpen(false)}
+            />
+        </>
+    );
 }
