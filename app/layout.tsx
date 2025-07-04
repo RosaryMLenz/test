@@ -6,6 +6,8 @@ import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
 import React from 'react';
 import { Toaster } from 'sonner';
+import {Providers} from "@/app/providers";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -37,7 +39,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
         <head>
             {/* Explicit <title> tag for IDE clarity */}
             <title>Rainforest Automotive</title>
@@ -63,18 +65,24 @@ export default function RootLayout({
                 }}
             />
         </head>
-        <body className={`${inter.className} bg-black text-white`}>
-        <header>
-            <NavBar />
-        </header>
-        <main>
-            <Toaster position="top-center" />
-            {children}
-        </main>
-        <footer>
-            <Footer />
-        </footer>
+
+        <body className={inter.className}>
+        <Providers>
+            <LanguageProvider>
+            <header>
+                <NavBar />
+            </header>
+            <main>
+                <Toaster position="top-center" />
+                {children}
+            </main>
+            <footer>
+                <Footer />
+            </footer>
+            </LanguageProvider>
+        </Providers>
         </body>
+
         </html>
     );
 }

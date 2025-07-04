@@ -10,6 +10,16 @@ import Step4CarProblems from './Step4CarProblems';
 import Step5 from './Step5';
 import Done from './Done';
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 export interface BookingFormData {
     name?: string;
     phone?: string;
@@ -31,11 +41,13 @@ interface BookingModalProps {
 export default function BookingModal({ isOpen, onCloseAction }: BookingModalProps) {
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [formData, setFormData] = useState<BookingFormData>({});
+    const [showAlert, setShowAlert] = useState(false);
+
     const totalSteps = 5;
 
     const handleNext = () => {
         if (currentStep === 1 && !formData.reason) {
-            alert('Please select a reason for your visit.');
+            setShowAlert(true);
             return;
         }
         setCurrentStep((prev) => prev + 1);
@@ -74,7 +86,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
         }
     };
 
-    // ✅ Scroll lock while modal is open
+    // Scroll lock while modal is open
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -89,66 +101,85 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
     if (!isOpen) return null;
 
     return (
-        <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-            onClick={handleCancel}
-        >
+        <>
             <div
-                className="bg-white rounded-lg w-full max-w-md p-4 sm:p-6 relative shadow-lg"
-                onClick={(e) => e.stopPropagation()} // ✅ Prevent closing when clicking inside
+                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+                onClick={handleCancel}
             >
-                {/* Close Button */}
-                <button
-                    onClick={handleCancel}
-                    aria-label="Close"
-                    className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition text-xl"
+                <div
+                    className="bg-white rounded-lg w-full max-w-md p-4 sm:p-6 relative shadow-lg"
+                    onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
                 >
-                    &times;
-                </button>
+                    {/* Close Button */}
+                    <button
+                        onClick={handleCancel}
+                        aria-label="Close"
+                        className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition text-xl"
+                    >
+                        &times;
+                    </button>
 
-                {/* Progress Bar */}
-                <div className="w-full bg-gray-200 h-2 rounded mb-4 overflow-hidden">
-                    <div
-                        className="h-full transition-all duration-300 rounded"
-                        style={{ width: `${progressPercent}%`, backgroundColor: barColor }}
-                    ></div>
-                </div>
-
-                {/* Step Content */}
-                {renderStep()}
-
-                {/* Navigation Buttons */}
-                {currentStep < 5 && (
-                    <div className="flex justify-between items-center mt-6">
-                        <button
-                            onClick={handleBack}
-                            disabled={currentStep === 0}
-                            className={`px-4 py-2 rounded transition ${
-                                currentStep === 0
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                            }`}
-                        >
-                            ← Back
-                        </button>
-
-                        <div className="flex gap-2">
-                            <button
-                                onClick={handleCancel}
-                                className="px-4 py-2 rounded border border-red-500 text-red-500 hover:bg-red-50 transition"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
-                                className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
-                            >
-                                {currentStep === totalSteps - 1 ? 'Submit' : 'Continue'}
-                            </button>
-                        </div>
+                    {/* Progress Bar */}
+                    <div className="w-full bg-gray-200 h-2 rounded mb-4 overflow-hidden">
+                        <div
+                            className="h-full transition-all duration-300 rounded"
+                            style={{ width: `${progressPercent}%`, backgroundColor: barColor }}
+                        ></div>
                     </div>
-                )}
+
+                    {/* Step Content */}
+                    {renderStep()}
+
+                    {/* Navigation Buttons */}
+                    {currentStep < 5 && (
+                        <div className="flex justify-between items-center mt-6">
+                            <button
+                                onClick={handleBack}
+                                disabled={currentStep === 0}
+                                className={`px-4 py-2 rounded transition ${
+                                    currentStep === 0
+                                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                                }`}
+                            >
+                                ← Back
+                            </button>
+
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={handleCancel}
+                                    className="px-4 py-2 rounded border border-red-500 text-red-500 hover:bg-red-50 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext}
+                                    className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
+                                >
+                                    {currentStep === totalSteps - 1 ? 'Submit' : 'Continue'}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+
+            {/* Alert Dialog */}
+            <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="text-black">Selection Required</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            To proceed with your booking, please select a reason for your visit from the options provided. This helps us prepare and serve you efficiently.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogAction onClick={() => setShowAlert(false)}>
+                            Continue
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 }
