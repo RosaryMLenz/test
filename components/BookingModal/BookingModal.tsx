@@ -6,7 +6,6 @@ import Step2 from './Step2';
 import Step3 from './Step3';
 import Step3CarProblems from './Step3CarProblems';
 import Step4 from './Step4';
-import Step4CarProblems from './Step4CarProblems';
 import Step5 from './Step5';
 import Done from './Done';
 
@@ -155,7 +154,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
             case 2:
                 const hasCarProblems = formData.reason?.split(", ").includes("Car Problems");
                 return hasCarProblems ? <Step3CarProblems {...commonProps} /> : <Step3 {...commonProps} />;
-            case 3: return formData.reason === 'Car problems' ? <Step4CarProblems {...commonProps} /> : <Step4 {...commonProps} />;
+            case 3: return <Step4 {...commonProps} />;
             case 4: return <Step5 {...commonProps} />;
             case 5: return <Done />;
             default: return null;
