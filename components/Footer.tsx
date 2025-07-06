@@ -57,7 +57,7 @@ const Footer = () => {
                         {language === "en" ? "Contact Us" : "Contáctenos"}
                     </h3>
                     <ul className="mt-4 space-y-2 text-sm text-gray-700 dark:text-gray-400">
-                        <li>Miami, FL</li>
+                        <li>Las Vegas, NV</li>
                         <li>
                             <a
                                 href="tel:+17028349385"
