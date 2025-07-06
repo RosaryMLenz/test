@@ -13,14 +13,11 @@ export default function Step5({ formData }: StepProps) {
             <p><strong>Name:</strong> {formData.name}</p>
             <p><strong>Phone:</strong> {formData.phone}</p>
             <p><strong>Reason:</strong> {formData.reason}</p>
-            {formData.reason === 'Car problems' ? (
+            {formData.reason?.split(", ").includes('Car Problems') && (
                 <p><strong>Problem Description:</strong> {formData.problemDescription}</p>
-            ) : (
-                <>
-                    <p><strong>Vehicle:</strong> {formData.vehicle}</p>
-                    <p><strong>Year:</strong> {formData.year}</p>
-                </>
             )}
+            <p><strong>Vehicle:</strong> {formData.vehicle}</p>
+            <p><strong>Year:</strong> {formData.year}</p>
             <p><strong>Date:</strong> {formData.date}</p>
             <p><strong>Time:</strong> {formData.time}</p>
         </div>
