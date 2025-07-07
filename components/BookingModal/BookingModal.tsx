@@ -168,7 +168,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
 
     return (
         <>
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="fixed inset-0 dark:bg-black bg-white bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white rounded-lg w-full max-w-md p-4 sm:p-6 relative shadow-lg dark:bg-neutral-900" onClick={(e) => e.stopPropagation()}>
                     <div className="w-full bg-gray-200 dark:bg-neutral-800 h-2 rounded mb-4 overflow-hidden">
                         <div className="h-full transition-all duration-300 rounded" style={{ width: `${progressPercent}%`, backgroundColor: barColor }}></div>
