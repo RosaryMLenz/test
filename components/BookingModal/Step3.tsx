@@ -1,7 +1,8 @@
 
 import React, { Dispatch, SetStateAction } from "react";
-import { BookingFormData } from "./BookingModal";
+import { BookingFormData } from "@/types/BookingFormData";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface StepProps {
     formData: BookingFormData;
@@ -11,15 +12,19 @@ interface StepProps {
 const options = [
     {
         key: "Drop off my vehicle",
-        description: "Leave your car with us for the day.",
+        descriptionEn: "Leave your car with us for the day.",
+        descriptionEs: "Deja tu coche con nosotros durante el día."
     },
     {
         key: "Wait at the shop",
-        description: "Available.",
+        descriptionEn: "Available.",
+        descriptionEs: "Disponible."
     },
 ];
 
 export default function Step3({ formData, setFormData }: StepProps) {
+    const { language } = useLanguage();
+
     const handleOptionSelect = (option: string) => {
         setFormData((prev) => ({
             ...prev,
@@ -31,12 +36,12 @@ export default function Step3({ formData, setFormData }: StepProps) {
         <div className="flex flex-col gap-4">
             <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-neutral-900">
                 <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
-                    Step 3: Vehicle Details
+                    {language === "en" ? "Step 3: Vehicle Details" : "Paso 3: Detalles del Vehículo"}
                 </h2>
 
                 <input
                     type="text"
-                    placeholder="Vehicle Make and Model"
+                    placeholder={language === "en" ? "Vehicle Make and Model" : "Marca y Modelo del Vehículo"}
                     value={formData.vehicle || ""}
                     onChange={(e) =>
                         setFormData((prev) => ({
@@ -48,7 +53,7 @@ export default function Step3({ formData, setFormData }: StepProps) {
                 />
                 <input
                     type="text"
-                    placeholder="Year"
+                    placeholder={language === "en" ? "Year" : "Año"}
                     value={formData.year || ""}
                     onChange={(e) =>
                         setFormData((prev) => ({
@@ -60,7 +65,7 @@ export default function Step3({ formData, setFormData }: StepProps) {
                 />
 
                 <div className="mt-4">
-                    {options.map(({ key, description }) => {
+                    {options.map(({ key, descriptionEn, descriptionEs }) => {
                         const isSelected = formData.dropOffOrWait === key;
                         return (
                             <div
@@ -78,10 +83,10 @@ export default function Step3({ formData, setFormData }: StepProps) {
                             >
                                 <div className="ml-1 flex flex-col">
                                     <span className="font-semibold text-gray-800 dark:text-gray-200">
-                                        {key}
+                                        {language === "en" ? key : key === "Drop off my vehicle" ? "Dejar mi vehículo" : "Esperar en el taller"}
                                     </span>
                                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                                        {description}
+                                        {language === "en" ? descriptionEn : descriptionEs}
                                     </span>
                                 </div>
                             </div>
