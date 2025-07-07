@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { BookingFormData } from "./BookingModal";
+import { BookingFormData } from "@/types/BookingFormData";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 

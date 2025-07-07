@@ -1,6 +1,6 @@
 
 import React, { Dispatch, SetStateAction } from 'react';
-import { BookingFormData } from './BookingModal';
+import { BookingFormData } from "@/types/BookingFormData";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface StepProps {

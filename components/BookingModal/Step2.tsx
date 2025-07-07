@@ -1,6 +1,6 @@
 
 import React, { Dispatch, SetStateAction } from "react";
-import { BookingFormData } from "./BookingModal";
+import { BookingFormData } from "@/types/BookingFormData";
 import { Car, Droplet, Wrench, AlertCircle, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
