@@ -20,7 +20,7 @@ const Hero = ({ onBookClick }: HeroProps) => {
         >
             {/* Background Image Overlay */}
             <div
-                className="absolute inset-0 bg-cover bg-center opacity-20"
+                className="absolute inset-0 bg-cover bg-center dark:opacity-100 opacity-70"
                 style={{ backgroundImage: "url('/mechanic-hero.jpg')" }}
                 aria-hidden="true"
             ></div>

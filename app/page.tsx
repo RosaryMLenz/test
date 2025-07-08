@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Hero from '@/components/Hero';
 import BookingModal from '@/components/BookingModal/BookingModal';
+import DiscountSection from "@/components/DiscountSection";
+import AutoRepairServicesSection from "@/components/AutoRepairServicesSection";
 
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,6 +12,8 @@ export default function Home() {
     return (
         <>
             <Hero onBookClick={() => setIsModalOpen(true)} />
+            <DiscountSection />
+            <AutoRepairServicesSection />
             {/* other sections */}
 
             <BookingModal
