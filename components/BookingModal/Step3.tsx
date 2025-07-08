@@ -1,4 +1,3 @@
-
 import React, { Dispatch, SetStateAction } from "react";
 import { BookingFormData } from "@/types/BookingFormData";
 import { cn } from "@/lib/utils";
@@ -12,11 +11,15 @@ interface StepProps {
 const options = [
     {
         key: "Drop off my vehicle",
+        labelEn: "Drop off my vehicle",
+        labelEs: "Dejar mi vehículo",
         descriptionEn: "Leave your car with us for the day.",
         descriptionEs: "Deja tu coche con nosotros durante el día."
     },
     {
         key: "Wait at the shop",
+        labelEn: "Wait at the shop",
+        labelEs: "Esperar en el taller",
         descriptionEn: "Available.",
         descriptionEs: "Disponible."
     },
@@ -65,7 +68,7 @@ export default function Step3({ formData, setFormData }: StepProps) {
                 />
 
                 <div className="mt-4">
-                    {options.map(({ key, descriptionEn, descriptionEs }) => {
+                    {options.map(({ key, labelEn, labelEs, descriptionEn, descriptionEs }) => {
                         const isSelected = formData.dropOffOrWait === key;
                         return (
                             <div
@@ -83,7 +86,7 @@ export default function Step3({ formData, setFormData }: StepProps) {
                             >
                                 <div className="ml-1 flex flex-col">
                                     <span className="font-semibold text-gray-800 dark:text-gray-200">
-                                        {language === "en" ? key : key === "Drop off my vehicle" ? "Dejar mi vehículo" : "Esperar en el taller"}
+                                        {language === "en" ? labelEn : labelEs}
                                     </span>
                                     <span className="text-sm text-gray-500 dark:text-gray-400">
                                         {language === "en" ? descriptionEn : descriptionEs}

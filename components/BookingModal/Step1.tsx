@@ -8,7 +8,6 @@ import { useLanguage } from "@/context/LanguageContext";
 interface StepProps {
     formData: BookingFormData;
     setFormData: Dispatch<SetStateAction<BookingFormData>>;
-    onNext: () => void;
 }
 
 export default function Step1({ formData, setFormData }: StepProps) {

@@ -1,4 +1,3 @@
-
 import React, { Dispatch, SetStateAction } from "react";
 import { BookingFormData } from "@/types/BookingFormData";
 import { Car, Droplet, Wrench, AlertCircle, Circle } from "lucide-react";
@@ -61,7 +60,6 @@ export default function Step2({ formData, setFormData }: StepProps) {
                 </p>
 
                 <div className="my-6 overflow-y-auto max-h-[400px] space-y-3 pr-1">
-                    {/* Car Problems pinned at top */}
                     {servicesTop.map(({ key, descriptionEn, descriptionEs, icon: Icon }) => {
                         const isSelected = selectedServices.includes(key);
                         return (
@@ -93,10 +91,8 @@ export default function Step2({ formData, setFormData }: StepProps) {
                         );
                     })}
 
-                    {/* Divider */}
                     <div className="border-t border-gray-300 dark:border-neutral-700 my-6" />
 
-                    {/* Other services */}
                     {servicesOther.map(({ key, descriptionEn, descriptionEs, icon: Icon }) => {
                         const isSelected = selectedServices.includes(key);
                         return (

@@ -1,3 +1,5 @@
+/* Fixed BookingModal.tsx with consistent totalSteps, clean hasCarProblems computation, removed unused onNext, added ARIA for accessibility, cleanup on modal close, loader on submit, and optional enhancements for clarity */
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -35,9 +37,12 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
         dropOffOrWait: "",
     });
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const { language, toggleLanguage } = useLanguage();
 
-    const totalSteps = 5;
+    const totalSteps = 6; // Now consistent with Done being step 6
+
+    const hasCarProblems = formData.reason?.split(", ").includes("Car Problems");
 
     const validateStep1 = (): boolean => {
         const name = formData.name.trim();
@@ -97,20 +102,29 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
     const handleNext = () => {
         if (currentStep === 0 && !validateStep1()) return;
         if (currentStep === 1 && !validateStep2()) return;
-        if (currentStep === 2 && !formData.reason?.includes("Car Problems") && !validateStep3()) return;
-        if (currentStep === 3 && !validateStep4()) return;
-
-        setCurrentStep((prev) => prev + 1);
+        if (currentStep === 2 && hasCarProblems && !formData.problemDescription?.trim()) {
+            toast.error(language === "en" ? "Please select at least one car problem before continuing." : "Por favor selecciona al menos un problema del vehículo antes de continuar.");
+            return;
+        }
+        if ((currentStep === 2 && !hasCarProblems) || (currentStep === 3 && hasCarProblems)) {
+            if (!validateStep3()) return;
+        }
+        if ((currentStep === 3 && !hasCarProblems) || (currentStep === 4 && hasCarProblems)) {
+            if (!validateStep4()) return;
+        }
+        setCurrentStep(prev => prev + 1);
     };
 
     const handleBack = () => {
-        if (currentStep > 0) {
-            setCurrentStep((prev) => prev - 1);
-        }
+        if (currentStep > 0) setCurrentStep(prev => prev - 1);
     };
 
     const handleCancel = () => {
         onCloseAction();
+        resetForm();
+    };
+
+    const resetForm = () => {
         setCurrentStep(0);
         setFormData({
             name: "",
@@ -129,77 +143,96 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
         });
     };
 
-    const handleSubmit = () => {
-        console.log('Submitting booking:', formData);
-        toast.success(language === "en" ? "Your appointment has been submitted!" : "¡Tu cita ha sido enviada!");
-        setCurrentStep(totalSteps);
+    const handleSubmit = async () => {
+        setIsSubmitting(true);
+        try {
+            const response = await fetch('/api/book', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                toast.success(language === "en" ? "Your appointment has been submitted!" : "¡Tu cita ha sido enviada!");
+                setCurrentStep(totalSteps - 1);
+            } else {
+                const data = await response.json();
+                toast.error(data.message || (language === "en" ? "Submission failed." : "Error al enviar."));
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error(language === "en" ? "An error occurred while submitting your booking." : "Ocurrió un error al enviar tu cita.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
-    const progressPercent = (currentStep / totalSteps) * 100;
+    useEffect(() => {
+        if (!isOpen) resetForm();
+    }, [isOpen]);
+
+    const progressPercent = (currentStep / (totalSteps - 1)) * 100;
     const barColor = currentStep === totalSteps - 1 ? '#22c55e' : '#3b82f6';
-    const commonProps = { formData, setFormData, onNext: handleNext };
+    const commonProps = { formData, setFormData };
 
     const renderStep = () => {
         switch (currentStep) {
             case 0: return <Step1 {...commonProps} />;
             case 1: return <Step2 {...commonProps} />;
-            case 2:
-                const hasCarProblems = formData.reason?.split(", ").includes("Car Problems");
-                return hasCarProblems ? <Step3CarProblems {...commonProps} /> : <Step3 {...commonProps} />;
-            case 3: return <Step4 {...commonProps} />;
-            case 4: return <Step5 {...commonProps} />;
+            case 2: return hasCarProblems ? <Step3CarProblems {...commonProps} /> : <Step3 {...commonProps} />;
+            case 3: return hasCarProblems ? <Step3 {...commonProps} /> : <Step4 {...commonProps} />;
+            case 4: return hasCarProblems ? <Step4 {...commonProps} /> : <Step5 {...commonProps} />;
             case 5: return <Done />;
             default: return null;
         }
     };
 
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
-        return () => {
-            document.body.style.overflow = '';
-        };
-    }, [isOpen]);
-
     if (!isOpen) return null;
 
     return (
-        <>
-            <div className="fixed inset-0 dark:bg-black bg-white bg-opacity-50 flex justify-center items-center z-50">
-                <div className="bg-white rounded-lg w-full max-w-md p-4 sm:p-6 relative shadow-lg dark:bg-neutral-900" onClick={(e) => e.stopPropagation()}>
-                    <div className="w-full bg-gray-200 dark:bg-neutral-800 h-2 rounded mb-4 overflow-hidden">
-                        <div className="h-full transition-all duration-300 rounded" style={{ width: `${progressPercent}%`, backgroundColor: barColor }}></div>
-                    </div>
-
-                    <div className="flex justify-end mb-2">
-                        <button onClick={toggleLanguage} className="border border-green-500 dark:border-green-400 px-2 py-1 rounded text-xs hover:bg-green-500 dark:hover:bg-green-400 hover:text-white dark:hover:text-black transition-colors">
-                            {language === "en" ? "ES" : "EN"}
-                        </button>
-                    </div>
-
-                    {renderStep()}
-
-                    {currentStep < 5 && (
-                        <div className="flex justify-between items-center mt-6">
-                            <button onClick={handleBack} disabled={currentStep === 0} className={`px-4 py-2 rounded transition ${currentStep === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-500' : 'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200'}`}>
-                                ← {language === "en" ? "Back" : "Atrás"}
-                            </button>
-
-                            <div className="flex gap-2">
-                                <button onClick={handleCancel} className="px-4 py-2 rounded border border-red-500 text-red-500 hover:bg-red-50 dark:hover:bg-neutral-800 transition">
-                                    {language === "en" ? "Cancel" : "Cancelar"}
-                                </button>
-                                <button onClick={currentStep === totalSteps - 1 ? handleSubmit : handleNext} className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition">
-                                    {currentStep === totalSteps - 1 ? (language === "en" ? 'Submit' : 'Enviar') : (language === "en" ? 'Continue' : 'Continuar')}
-                                </button>
-                            </div>
-                        </div>
-                    )}
+        <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="booking-modal-title"
+            className="fixed inset-0 dark:bg-black bg-white bg-opacity-50 flex justify-center items-center z-50"
+        >
+            <div
+                className="bg-white rounded-lg w-full max-w-md p-4 sm:p-6 relative shadow-lg dark:bg-neutral-900"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="w-full bg-gray-200 dark:bg-neutral-800 h-2 rounded mb-4 overflow-hidden">
+                    <div className="h-full transition-all duration-300 rounded" style={{ width: `${progressPercent}%`, backgroundColor: barColor }}></div>
                 </div>
+
+                <div className="flex justify-end mb-2">
+                    <button onClick={toggleLanguage} className="border border-green-500 dark:border-green-400 px-2 py-1 rounded text-xs hover:bg-green-500 dark:hover:bg-green-400 hover:text-white dark:hover:text-black transition-colors">
+                        {language === "en" ? "ES" : "EN"}
+                    </button>
+                </div>
+
+                {renderStep()}
+
+                {currentStep < totalSteps - 1 && (
+                    <div className="flex justify-between items-center mt-6">
+                        <button onClick={handleBack} disabled={currentStep === 0} className={`px-4 py-2 rounded transition ${currentStep === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-500' : 'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200'}`}>
+                            ← {language === "en" ? "Back" : "Atrás"}
+                        </button>
+
+                        <div className="flex gap-2">
+                            <button onClick={handleCancel} className="px-4 py-2 rounded border border-red-500 text-red-500 hover:bg-red-50 dark:hover:bg-neutral-800 transition">
+                                {language === "en" ? "Cancel" : "Cancelar"}
+                            </button>
+                            <button
+                                onClick={currentStep === totalSteps - 2 ? handleSubmit : handleNext}
+                                className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? (language === "en" ? "Submitting..." : "Enviando...") : currentStep === totalSteps - 2 ? (language === "en" ? 'Submit' : 'Enviar') : (language === "en" ? 'Continue' : 'Continuar')}
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
-        </>
+        </div>
     );
 }
