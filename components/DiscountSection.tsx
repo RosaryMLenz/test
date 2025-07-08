@@ -18,7 +18,7 @@ const slides = [
     "/discount-slides/slide10.jpg"
 ];
 
-const INTERVAL_MS = 3000;
+const INTERVAL_MS = 5000;
 
 export default function DiscountSection() {
     const router = useRouter();
