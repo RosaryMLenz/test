@@ -9,16 +9,24 @@ import AutoRepairServicesSection from "@/components/AutoRepairServicesSection";
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const handleOpenBookingModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseBookingModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <>
-            <Hero onBookClick={() => setIsModalOpen(true)} />
-            <DiscountSection />
+            <Hero onBookClick={handleOpenBookingModal} />
+            <DiscountSection onBookClick={handleOpenBookingModal} />
             <AutoRepairServicesSection />
             {/* other sections */}
 
             <BookingModal
                 isOpen={isModalOpen}
-                onCloseAction={() => setIsModalOpen(false)}
+                onCloseAction={handleCloseBookingModal}
             />
         </>
     );
