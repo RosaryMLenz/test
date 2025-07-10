@@ -17,8 +17,8 @@ model Booking {
   vehicle             String?
   year                String?
   problemDescription  String?
-  date                String?  // Store as "YYYY-MM-DD"
-  time                String?  // Store as "h:mm A"
+  date                String? // Store as "YYYY-MM-DD"
+  time                String? // Store as "h:mm A"
   additionalDetails   String?
   acceptTerms         Boolean
   enableNotifications Boolean
@@ -28,3 +28,14 @@ model Booking {
   @@index([date, time]) // For fast lookup
 }
 
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String // hashed with bcrypt
+  role      String   @default("admin") // e.g., "admin", "user"
+  createdAt DateTime @default(now())
+
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+}
