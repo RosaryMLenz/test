@@ -28,7 +28,7 @@ export default function NavBar() {
     }, []);
 
     return (
-        <header className="bg-white text-black dark:bg-black dark:text-white border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors">
+        <header className="bg-white text-black dark:bg-black dark:text-white border-b border-gray-200 dark:border-gray-800 transition-colors">
             <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
                 <Link href="/" className="text-lg font-semibold tracking-tight hover:text-green-500 dark:hover:text-green-400 transition-colors">
                     Rainforest Automotive

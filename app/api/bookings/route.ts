@@ -1,27 +1,31 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@/lib/generated/prisma';
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import { checkAdminSession } from "@/lib/auth/checkAdminSession";
 
-const prisma = new PrismaClient();
-
-export async function GET(req: Request) {
-    const { searchParams } = new URL(req.url);
-    const date = searchParams.get('date');
-
-    if (!date) {
-        return NextResponse.json({ message: 'Date is required.' }, { status: 400 });
-    }
-
+export async function GET() {
     try {
+        const auth = await checkAdminSession();
+
+        if (!auth.authorized) {
+            return NextResponse.json(
+                { error: auth.message },
+                { status: auth.status }
+            );
+        }
+
         const bookings = await prisma.booking.findMany({
-            where: { date },
-            select: { time: true },
+            orderBy: { createdAt: "desc" },
         });
 
-        const bookedTimes = bookings.map((b) => b.time);
-
-        return NextResponse.json({ bookedTimes }, { status: 200 });
+        return NextResponse.json({
+            bookings,
+            count: bookings.length,
+        });
     } catch (error) {
-        console.error(error);
-        return NextResponse.json({ message: 'Error fetching booked times.' }, { status: 500 });
+        console.error("Error fetching bookings:", error);
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
     }
 }

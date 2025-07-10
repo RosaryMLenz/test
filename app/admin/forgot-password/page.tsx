@@ -12,18 +12,33 @@ export default function ForgotPasswordPage() {
         e.preventDefault();
         setLoading(true);
 
-        const res = await fetch("/api/auth/forgot-password", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-        });
-
-        if (res.ok) {
-            toast.success("If your email exists, a reset link has been sent.");
-        } else {
-            toast.error("Something went wrong. Try again.");
+        // Basic email validation
+        if (!email || !email.includes('@')) {
+            toast.error("Please enter a valid email address");
+            setLoading(false);
+            return;
         }
-        setLoading(false);
+
+        try {
+            const res = await fetch("/api/auth/forgot-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+
+            if (res.ok) {
+                toast.success("If your email exists, a reset link has been sent.");
+                setEmail(""); // Clear form on success
+            } else {
+                const data = await res.json();
+                toast.error(data.error || "Something went wrong. Try again.");
+            }
+        } catch (error) {
+            console.error("Forgot password error:", error);
+            toast.error("Something went wrong. Please try again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

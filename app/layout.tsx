@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Rainforest Automotive',
         description:
-            'Miami’s trusted auto repair and mechanic service. Book online for quick, quality repairs.',
+            'Miamis trusted auto repair and mechanic service. Book online for quick, quality repairs.',
     },
 };
 
@@ -72,13 +72,14 @@ export default function RootLayout({
             <LanguageProvider>
                 <StickyNavWrapper />
 
-                <main>
-                <Toaster position="top-center" />
-                {children}
-            </main>
-            <footer>
-                <Footer />
-            </footer>
+                {/* Add padding-top to account for fixed navbar */}
+                <main className="pt-16">
+                    <Toaster position="top-center" />
+                    {children}
+                </main>
+                <footer>
+                    <Footer />
+                </footer>
             </LanguageProvider>
         </Providers>
         </body>

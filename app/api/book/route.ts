@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { PrismaClient } from '@/lib/generated/prisma';
 import { Resend } from 'resend';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+
+
 
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -103,3 +107,38 @@ export async function POST(req: Request): Promise<NextResponse> {
         );
     }
 }
+
+export async function GET() {
+    try {
+        // Check if user is authenticated and is admin
+        const session = await getServerSession(authOptions);
+
+        if (!session || !session.user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        // Check if user has admin role
+        const user = await prisma.user.findUnique({
+            where: { email: session.user.email! }
+        });
+
+        if (user?.role !== "admin") {
+            return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+        }
+
+        const bookings = await prisma.booking.findMany({
+            orderBy: {
+                createdAt: "desc"
+            }
+        });
+
+        return NextResponse.json({
+            bookings,
+            count: bookings.length
+        });
+    } catch (error) {
+        console.error("Error fetching bookings:", error);
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
+}
+
