@@ -1,4 +1,21 @@
-// types/Booking.ts
+// types/BookingFormData.ts
+
+export interface BookingFormData {
+    name: string;
+    email: string;
+    phone: string;
+    reason?: string;
+    vehicle?: string;
+    year?: string;
+    problemDescription?: string;
+    date?: string;
+    time?: string;
+    photos?: FileList;
+    additionalDetails?: string;
+    acceptTerms: boolean;
+    enableNotifications: boolean;
+    dropOffOrWait: string;
+}
 
 export interface Booking {
     id: string;
@@ -16,4 +33,5 @@ export interface Booking {
     enableNotifications: boolean;
     dropOffOrWait?: string | null;
     createdAt: Date;
+    updatedAt: Date;
 }

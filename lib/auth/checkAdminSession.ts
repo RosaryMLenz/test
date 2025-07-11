@@ -1,7 +1,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
-import { prisma } from "@/lib/prisma";
-import { User } from "@/lib/generated/prisma";
+import { PrismaClient, User } from "@/lib/generated/prisma";
+
+const prisma = new PrismaClient();
 
 interface CheckAdminSessionResult {
     authorized: boolean;

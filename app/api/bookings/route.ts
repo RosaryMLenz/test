@@ -9,7 +9,7 @@ export async function GET() {
         if (!auth.authorized) {
             return NextResponse.json(
                 { error: auth.message },
-                { status: auth.status }
+                { status: auth.status },
             );
         }
 
@@ -25,7 +25,7 @@ export async function GET() {
         console.error("Error fetching bookings:", error);
         return NextResponse.json(
             { error: "Internal server error" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

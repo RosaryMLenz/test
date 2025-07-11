@@ -24,6 +24,7 @@ model Booking {
   enableNotifications Boolean
   dropOffOrWait       String?
   createdAt           DateTime @default(now()) // UTC by default
+  updatedAt           DateTime @updatedAt
 
   @@index([date, time]) // For fast lookup
 }
