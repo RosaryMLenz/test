@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Booking } from "@/types/BookingFormData";
+import Sidebar from "@/components/admin/Sidebar";
 import { MoreVertical } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import Sidebar from "@/components/admin/Sidebar";
-import { getBookings } from "@/lib/actions/getBookings";
-import { Booking } from "@/types/BookingFormData";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminDashboardPage() {
     const router = useRouter();
@@ -15,52 +15,73 @@ export default function AdminDashboardPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchBookings = async () => {
-            const data = await getBookings();
-            setBookings(data);
-            setLoading(false);
+        const loadBookings = async () => {
+            try {
+                const res = await fetch("/api/bookings");
+                const data = await res.json();
+                setBookings(data.bookings ?? []);
+            } catch (error) {
+                console.error("Failed to fetch bookings:", error);
+            } finally {
+                setLoading(false);
+            }
         };
-        fetchBookings();
+        loadBookings();
     }, []);
 
     return (
         <div className="flex min-h-screen">
             <Sidebar />
-            <main className="flex-1 p-6">
-                <h1 className="text-2xl font-bold mb-4">Bookings</h1>
+            <main className="flex-1 p-6 dark:bg-black bg-white">
+                <h1 className="text-2xl font-bold mb-4 text-neutral-800 dark:text-neutral-200">
+                    Bookings
+                </h1>
                 {loading ? (
-                    <p>Loading...</p>
+                    <Skeleton className="h-96 w-full" />
                 ) : (
-                    <table className="w-full">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {bookings.map((b) => (
-                            <tr key={b.id}>
-                                <td><Checkbox /></td>
-                                <td>{b.name}</td>
-                                <td>{b.email}</td>
-                                <td>{b.phone}</td>
-                                <td>{b.date}</td>
-                                <td>{b.time}</td>
-                                <td>
-                                    <Button onClick={() => router.push(`/admin/bookings/${b.id}`)}>
-                                        <MoreVertical size={16} />
-                                    </Button>
-                                </td>
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full border-collapse">
+                            <thead>
+                            <tr className="border-b dark:border-neutral-700">
+                                <th className="text-left p-2">Select</th>
+                                <th className="text-left p-2">Name</th>
+                                <th className="text-left p-2">Email</th>
+                                <th className="text-left p-2">Phone</th>
+                                <th className="text-left p-2">Date</th>
+                                <th className="text-left p-2">Time</th>
+                                <th className="text-left p-2">Actions</th>
                             </tr>
-                        ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {bookings.map((booking) => (
+                                <tr
+                                    key={booking.id}
+                                    className="border-b dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                >
+                                    <td className="p-2">
+                                        <Checkbox />
+                                    </td>
+                                    <td className="p-2">{booking.name}</td>
+                                    <td className="p-2">{booking.email}</td>
+                                    <td className="p-2">{booking.phone}</td>
+                                    <td className="p-2">{booking.date}</td>
+                                    <td className="p-2">{booking.time}</td>
+                                    <td className="p-2">
+                                        <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            onClick={() =>
+                                                router.push(`/admin/bookings/${booking.id}`)
+                                            }
+                                        >
+                                            <MoreVertical size={18} />
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </main>
         </div>
