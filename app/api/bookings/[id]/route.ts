@@ -1,4 +1,3 @@
-// File: app/api/bookings/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -17,6 +16,7 @@ export async function GET(
 
         return NextResponse.json({ booking });
     } catch (error) {
+        console.error("GET /api/bookings/[id] failed:", error);
         return NextResponse.json({ error: "Failed to fetch booking" }, { status: 500 });
     }
 }
@@ -34,6 +34,7 @@ export async function PUT(
 
         return NextResponse.json({ booking: updated });
     } catch (error) {
+        console.error("PUT /api/bookings/[id] failed:", error);
         return NextResponse.json({ error: "Failed to update booking" }, { status: 500 });
     }
 }
@@ -49,6 +50,7 @@ export async function DELETE(
 
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error("DELETE /api/bookings/[id] failed:", error);
         return NextResponse.json({ error: "Failed to delete booking" }, { status: 500 });
     }
 }
