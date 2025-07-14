@@ -35,6 +35,12 @@ export default function AdminLoginPage() {
             redirect: false,
         });
 
+        if (!email || !password) {
+            setError("Email and password are required.");
+            setLoading(false);
+            return;
+        }
+
         if (res?.error) {
             setError("Invalid email or password.");
             toast.error("Invalid email or password. Please try again.");

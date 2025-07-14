@@ -14,24 +14,25 @@ interface CheckAdminSessionResult {
 export async function checkAdminSession(): Promise<CheckAdminSessionResult> {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user) {
+    // ✅ SAFETY CHECK: make sure session and session.user.email are defined
+    if (!session?.user?.email) {
         return {
             authorized: false,
             status: 401,
-            message: "Unauthorized",
+            message: "Unauthorized - no email in session",
             user: null,
         };
     }
 
     const user = await prisma.user.findUnique({
-        where: { email: session.user.email ?? undefined },
+        where: { email: session.user.email },
     });
 
     if (!user || user.role !== "admin") {
         return {
             authorized: false,
             status: 403,
-            message: "Forbidden",
+            message: "Forbidden - not an admin",
             user: null,
         };
     }
