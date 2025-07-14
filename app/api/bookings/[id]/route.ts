@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params;  // Await the params Promise to get the actual values
+
         const booking = await prisma.booking.findUnique({
-            where: { id: params.id },
+            where: { id },
         });
 
         if (!booking) {
@@ -18,11 +20,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params;  // Await the params Promise to get the actual values
+
         const data = await req.json();
         const updated = await prisma.booking.update({
-            where: { id: params.id },
+            where: { id },
             data,
         });
 
@@ -33,10 +37,12 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params;  // Await the params Promise to get the actual values
+
         await prisma.booking.delete({
-            where: { id: params.id },
+            where: { id },
         });
 
         return NextResponse.json({ success: true });
