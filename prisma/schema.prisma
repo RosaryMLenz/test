@@ -15,6 +15,9 @@ model Booking {
   phone               String
   reason              String?
   vehicle             String?
+  make                String?
+  model               String?
+  trim                String?
   year                String?
   problemDescription  String?
   date                String? // Store as "YYYY-MM-DD"

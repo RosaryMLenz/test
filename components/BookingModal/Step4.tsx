@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import { useLanguage } from "@/context/LanguageContext";
+import { toast } from "sonner";
 
 interface StepProps {
     formData: BookingFormData;
@@ -19,7 +20,7 @@ export default function Step4({ formData, setFormData }: StepProps) {
     const today = dayjs();
     const [weekOffset, setWeekOffset] = useState(0);
     const [selectedDate, setSelectedDate] = useState<string | null>(formData.date || null);
-    const [selectedTime, setSelectedTime] = useState<string | null>(formData.time || null);
+    const [selectedTime, setSelectedTime] = useState<string | undefined>(formData.time || undefined);
     const [bookedTimes, setBookedTimes] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -28,6 +29,10 @@ export default function Step4({ formData, setFormData }: StepProps) {
     const handleDateSelect = (date: dayjs.Dayjs) => {
         if (date.isBefore(today, "day") || date.day() === 0) return;
         const dateStr = date.format("YYYY-MM-DD");
+        if (dateStr !== selectedDate) {
+            setSelectedTime(undefined);
+            setFormData((prev) => ({ ...prev, time: undefined }));
+        }
         setSelectedDate(dateStr);
         setFormData((prev) => ({ ...prev, date: dateStr }));
     };
@@ -56,35 +61,53 @@ export default function Step4({ formData, setFormData }: StepProps) {
         return slots;
     };
 
-    // Fetch booked times when a date is selected
     useEffect(() => {
-        const fetchBookedTimes = async () => {
-            if (!selectedDate) {
-                setBookedTimes([]);
-                return;
-            }
-            setLoading(true);
-            try {
-                const res = await fetch(`/api/bookings?date=${selectedDate}`);
-                const data = await res.json();
+        if (!selectedDate) {
+            setBookedTimes([]);
+            return;
+        }
+        setLoading(true);
+        fetch(`/api/bookings?date=${selectedDate}`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch booked times');
+                }
+                return res.json();
+            })
+            .then((data) => {
                 setBookedTimes(data.bookedTimes || []);
-            } catch (error) {
+            })
+            .catch((error) => {
                 console.error(error);
                 setBookedTimes([]);
-            } finally {
+                toast.error(language === "en" ? "Failed to load available times. All slots shown as available." : "Error al cargar horarios disponibles. Todos los slots se muestran como disponibles.");
+            })
+            .finally(() => {
                 setLoading(false);
-            }
-        };
-        fetchBookedTimes();
-    }, [selectedDate]);
+            });
+    }, [selectedDate, language]);
+
+    useEffect(() => {
+        if (selectedTime && bookedTimes.includes(selectedTime)) {
+            setSelectedTime(undefined);
+            setFormData((prev) => ({ ...prev, time: undefined }));
+            toast(
+                language === "en"
+                    ? "Your previously selected time is no longer available."
+                    : "Tu hora seleccionada previamente ya no está disponible."
+            );
+        }
+    }, [bookedTimes, selectedTime, language, setFormData]);
+
+    // Removed the premature toast useEffect to avoid glitch
 
     return (
         <div className="flex flex-col gap-2">
             <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-neutral-900">
                 <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
                     {language === "en"
-                        ? "Step 4: Select Appointment Date & Time"
-                        : "Paso 4: Selecciona Fecha y Hora de la Cita"}
+                        ? "Select Appointment Date & Time"
+                        : "Selecciona Fecha y Hora de la Cita"}
                 </h2>
                 <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
                     {language === "en"
@@ -169,15 +192,16 @@ export default function Step4({ formData, setFormData }: StepProps) {
                         <div className="grid grid-cols-2 gap-2 max-h-[200px] overflow-y-auto">
                             {generateTimeSlots(selectedDate).map((time) => {
                                 const isBooked = bookedTimes.includes(time);
+                                const isSelected = selectedTime === time;
                                 return (
                                     <div
                                         key={time}
                                         onClick={() => !isBooked && handleTimeSelect(time)}
                                         className={cn(
-                                            "p-2 text-center rounded cursor-pointer text-sm transition select-none",
+                                            "p-2 text-center rounded cursor-pointer text-sm transition-all select-none",
                                             isBooked
                                                 ? "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-400"
-                                                : selectedTime === time
+                                                : isSelected
                                                     ? "bg-blue-500 text-white hover:bg-blue-600"
                                                     : "bg-gray-100 dark:bg-neutral-800 hover:bg-gray-200 dark:hover:bg-neutral-700"
                                         )}

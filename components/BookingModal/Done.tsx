@@ -9,11 +9,10 @@ export default function Done() {
     const { language } = useLanguage();
 
     const handleDone = () => {
-        console.log("Done clicked, navigating home...");
         router.push("/");
         setTimeout(() => {
             window.location.href = "/";
-        }, 500); // fallback in case router.push is blocked
+        }, 500); // Fallback in case router.push doesn't work
     };
 
     return (

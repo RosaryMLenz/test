@@ -4,17 +4,19 @@ export interface BookingFormData {
     name: string;
     email: string;
     phone: string;
-    reason?: string;
-    vehicle?: string;
-    year?: string;
-    problemDescription?: string;
-    date?: string;
-    time?: string;
-    photos?: FileList;
-    additionalDetails?: string;
+    reason: string;
+    make: string; // New
+    year: string;
+    model: string; // New
+    trim: string; // New
+    problemDescription: string;
+    date: string;
+    time: string;
+    additionalDetails: string;
     acceptTerms: boolean;
     enableNotifications: boolean;
     dropOffOrWait: string;
+    vehicle?: string; // Optional, can compute as `${make} ${model}` if needed
 }
 
 export interface Booking {

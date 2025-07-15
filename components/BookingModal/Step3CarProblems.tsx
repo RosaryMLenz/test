@@ -41,7 +41,7 @@ export default function Step3CarProblems({ formData, setFormData }: StepProps) {
         <div className="flex flex-col gap-2">
             <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-neutral-900">
                 <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-                    {language === "en" ? "Step 3: Describe Car Problems" : "Paso 3: Describe los Problemas del Vehículo"}
+                    {language === "en" ? "Describe Car Problems" : "Describe los Problemas del Vehículo"}
                 </h2>
                 <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
                     {language === "en"

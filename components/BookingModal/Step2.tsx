@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { BookingFormData } from "@/types/BookingFormData";
-import { Car, Droplet, Wrench, AlertCircle, Circle } from "lucide-react";
+import { Car, Droplet, Wrench, AlertCircle, Circle, Wind, Battery, Cog, Lightbulb, Cloud } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -15,17 +15,17 @@ const servicesTop = [
 
 const servicesOther = [
     { key: "Oil Change", descriptionEn: "Oil, Filter, Lube", descriptionEs: "Aceite, Filtro, Lubricación", icon: Droplet },
-    { key: "AC Service", descriptionEn: "Cooling system check", descriptionEs: "Revisión del sistema de aire", icon: Car },
+    { key: "AC Service", descriptionEn: "Cooling system check", descriptionEs: "Revisión del sistema de aire", icon: Wind },
     { key: "Brakes", descriptionEn: "Check pads, rotors", descriptionEs: "Revisar pastillas, rotores", icon: AlertCircle },
-    { key: "Engine Diagnostics", descriptionEn: "Full engine scan", descriptionEs: "Escaneo completo del motor", icon: Car },
+    { key: "Engine Diagnostics", descriptionEn: "Full engine scan", descriptionEs: "Escaneo completo del motor", icon: Wrench },
     { key: "Tire Rotation", descriptionEn: "Balance and alignment", descriptionEs: "Balanceo y alineación", icon: Circle },
-    { key: "Battery Check", descriptionEn: "Test and inspect battery", descriptionEs: "Probar e inspeccionar batería", icon: Car },
-    { key: "Transmission Check", descriptionEn: "Fluid and diagnostics", descriptionEs: "Fluidos y diagnóstico", icon: Wrench },
+    { key: "Battery Check", descriptionEn: "Test and inspect battery", descriptionEs: "Probar e inspeccionar batería", icon: Battery },
+    { key: "Transmission Check", descriptionEn: "Fluid and diagnostics", descriptionEs: "Fluidos y diagnóstico", icon: Cog },
     { key: "Suspension Check", descriptionEn: "Shocks, struts", descriptionEs: "Amortiguadores, puntales", icon: Car },
-    { key: "Fluid Check", descriptionEn: "All essential fluids", descriptionEs: "Todos los fluidos esenciales", icon: Car },
-    { key: "Light Inspection", descriptionEn: "Headlights, signals", descriptionEs: "Luces delanteras, señales", icon: Car },
-    { key: "Exhaust Check", descriptionEn: "Emissions and leaks", descriptionEs: "Emisiones y fugas", icon: Car },
-    { key: "Cooling System", descriptionEn: "Radiator and hoses", descriptionEs: "Radiador y mangueras", icon: Car },
+    { key: "Fluid Check", descriptionEn: "All essential fluids", descriptionEs: "Todos los fluidos esenciales", icon: Droplet },
+    { key: "Light Inspection", descriptionEn: "Headlights, signals", descriptionEs: "Luces delanteras, señales", icon: Lightbulb },
+    { key: "Exhaust Check", descriptionEn: "Emissions and leaks", descriptionEs: "Emisiones y fugas", icon: Cloud },
+    { key: "Cooling System", descriptionEn: "Radiator and hoses", descriptionEs: "Radiador y mangueras", icon: Wind },
 ];
 
 export default function Step2({ formData, setFormData }: StepProps) {
@@ -51,7 +51,7 @@ export default function Step2({ formData, setFormData }: StepProps) {
         <div className="flex flex-col gap-2">
             <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-neutral-900">
                 <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-                    {language === "en" ? "Step 2: Select Services" : "Paso 2: Selecciona Servicios"}
+                    {language === "en" ? "Select Services" : "Selecciona Servicios"}
                 </h2>
                 <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
                     {language === "en"

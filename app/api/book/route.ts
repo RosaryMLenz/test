@@ -5,8 +5,6 @@ import { Resend } from 'resend';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 
-
-
 const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -16,7 +14,10 @@ const bookingSchema = z.object({
     phone: z.string().min(10),
     reason: z.string().optional(),
     vehicle: z.string().optional(),
+    make: z.string().optional(),
     year: z.string().optional(),
+    model: z.string().optional(),
+    trim: z.string().optional(),
     problemDescription: z.string().optional(),
     date: z.string().optional(),
     time: z.string().optional(),
@@ -60,10 +61,10 @@ export async function POST(req: Request): Promise<NextResponse> {
 
         console.log("✅ Booking saved in database.");
 
-        // ✅ Send confirmation email
-        await resend.emails.send({
+        // ✅ Send confirmation email to user
+        const userEmailResponse = await resend.emails.send({
             from: 'Rainforest Automotive <onboarding@resend.dev>',
-            to: process.env.ADMIN_NOTIFICATION_EMAIL!,
+            to: bookingData.email,
             subject: 'Booking Confirmation - Rainforest Automotive',
             html: `
                 <h2>Booking Confirmation</h2>
@@ -74,7 +75,10 @@ export async function POST(req: Request): Promise<NextResponse> {
                     <li><strong>Phone:</strong> ${bookingData.phone}</li>
                     <li><strong>Reason:</strong> ${bookingData.reason || 'N/A'}</li>
                     <li><strong>Vehicle:</strong> ${bookingData.vehicle || 'N/A'}</li>
+                    <li><strong>Make:</strong> ${bookingData.make || 'N/A'}</li>
                     <li><strong>Year:</strong> ${bookingData.year || 'N/A'}</li>
+                    <li><strong>Model:</strong> ${bookingData.model || 'N/A'}</li>
+                    <li><strong>Trim:</strong> ${bookingData.trim || 'N/A'}</li>
                     <li><strong>Problem Description:</strong> ${bookingData.problemDescription || 'N/A'}</li>
                     <li><strong>Date:</strong> ${bookingData.date || 'N/A'}</li>
                     <li><strong>Time:</strong> ${bookingData.time || 'N/A'}</li>
@@ -85,7 +89,37 @@ export async function POST(req: Request): Promise<NextResponse> {
             `,
         });
 
-        console.log("✅ Confirmation email sent via Resend.");
+        console.log("✅ User confirmation email response:", userEmailResponse);
+
+        // Optional: Send notification to admin if needed
+        if (process.env.ADMIN_NOTIFICATION_EMAIL) {
+            const adminEmailResponse = await resend.emails.send({
+                from: 'Rainforest Automotive <onboarding@resend.dev>',
+                to: process.env.ADMIN_NOTIFICATION_EMAIL,
+                subject: 'New Booking Notification - Rainforest Automotive',
+                html: `
+                    <h2>New Booking Received</h2>
+                    <p>A new booking has been made. Here are the details:</p>
+                    <ul>
+                        <li><strong>Name:</strong> ${bookingData.name}</li>
+                        <li><strong>Email:</strong> ${bookingData.email}</li>
+                        <li><strong>Phone:</strong> ${bookingData.phone}</li>
+                        <li><strong>Reason:</strong> ${bookingData.reason || 'N/A'}</li>
+                        <li><strong>Vehicle:</strong> ${bookingData.vehicle || 'N/A'}</li>
+                        <li><strong>Make:</strong> ${bookingData.make || 'N/A'}</li>
+                        <li><strong>Year:</strong> ${bookingData.year || 'N/A'}</li>
+                        <li><strong>Model:</strong> ${bookingData.model || 'N/A'}</li>
+                        <li><strong>Trim:</strong> ${bookingData.trim || 'N/A'}</li>
+                        <li><strong>Problem Description:</strong> ${bookingData.problemDescription || 'N/A'}</li>
+                        <li><strong>Date:</strong> ${bookingData.date || 'N/A'}</li>
+                        <li><strong>Time:</strong> ${bookingData.time || 'N/A'}</li>
+                        <li><strong>Additional Details:</strong> ${bookingData.additionalDetails || 'N/A'}</li>
+                        <li><strong>Drop Off or Wait:</strong> ${bookingData.dropOffOrWait || 'N/A'}</li>
+                    </ul>
+                `,
+            });
+            console.log("✅ Admin notification email response:", adminEmailResponse);
+        }
 
         return NextResponse.json(
             { message: 'Booking received and confirmation email sent.' },
@@ -141,4 +175,3 @@ export async function GET() {
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
-

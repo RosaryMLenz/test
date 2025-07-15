@@ -31,7 +31,7 @@ export default function Step1({ formData, setFormData }: StepProps) {
     };
 
     const translations = {
-        title: language === "en" ? "Book Your Appointment" : "Reserva Tu Cita",
+        title: language === "en" ? "Contact Information" : "Información de Contacto",
         subtitle: language === "en"
             ? "Start by providing your details so we can confirm your booking."
             : "Comienza proporcionando tus datos para confirmar tu cita.",

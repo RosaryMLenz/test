@@ -26,8 +26,10 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
         email: "",
         phone: "",
         reason: "",
-        vehicle: "",
+        make: "", // New
         year: "",
+        model: "", // New
+        trim: "", // New
         problemDescription: "",
         date: "",
         time: "",
@@ -40,9 +42,8 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { language, toggleLanguage } = useLanguage();
 
-    const totalSteps = 6; // Now consistent with Done being step 6
-
     const hasCarProblems = formData.reason?.split(", ").includes("Car Problems");
+    const totalSteps = hasCarProblems ? 7 : 6;
 
     const validateStep1 = (): boolean => {
         const name = formData.name.trim();
@@ -84,8 +85,12 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
     };
 
     const validateStep3 = (): boolean => {
-        if (!formData.vehicle?.trim() || !formData.year?.trim() || !formData.dropOffOrWait) {
-            toast.error(language === "en" ? "Please fill in vehicle details and select an option before continuing." : "Por favor completa los detalles del vehículo y selecciona una opción antes de continuar.");
+        if (!formData.make?.trim() || !formData.year?.trim() || !formData.model?.trim() || !formData.trim?.trim() || !formData.dropOffOrWait) {
+            toast.error(language === "en" ? "Please fill in all vehicle details and select an option before continuing." : "Por favor completa todos los detalles del vehículo y selecciona una opción antes de continuar.");
+            return false;
+        }
+        if (!/^\d{4}$/.test(formData.year.trim())) {
+            toast.error(language === "en" ? "Please enter a valid 4-digit year." : "Por favor ingresa un año válido de 4 dígitos.");
             return false;
         }
         return true;
@@ -131,8 +136,10 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
             email: "",
             phone: "",
             reason: "",
-            vehicle: "",
+            make: "",
             year: "",
+            model: "",
+            trim: "",
             problemDescription: "",
             date: "",
             time: "",
@@ -171,6 +178,14 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
         if (!isOpen) resetForm();
     }, [isOpen]);
 
+    // Adjust currentStep if hasCarProblems changes after Step 1
+    useEffect(() => {
+        if (currentStep > 1) {
+            setCurrentStep(2);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasCarProblems]);
+
     const progressPercent = (currentStep / (totalSteps - 1)) * 100;
     const barColor = currentStep === totalSteps - 1 ? '#22c55e' : '#3b82f6';
     const commonProps = { formData, setFormData };
@@ -182,7 +197,8 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
             case 2: return hasCarProblems ? <Step3CarProblems {...commonProps} /> : <Step3 {...commonProps} />;
             case 3: return hasCarProblems ? <Step3 {...commonProps} /> : <Step4 {...commonProps} />;
             case 4: return hasCarProblems ? <Step4 {...commonProps} /> : <Step5 {...commonProps} />;
-            case 5: return <Done />;
+            case 5: return hasCarProblems ? <Step5 {...commonProps} /> : <Done />;
+            case 6: return <Done />;
             default: return null;
         }
     };
@@ -232,6 +248,12 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
                         </div>
                     </div>
                 )}
+
+                <div className="mt-2 text-center text-sm">
+                    <a href="https://vercel.com/benfrank7777s-projects/portafolio/EasU9vZYizNgTQPcdpJxSCGSQELV" className="text-neutral-700 dark:text-neutral-200 hover:underline">
+                        powered by Frank
+                    </a>
+                </div>
             </div>
         </div>
     );
