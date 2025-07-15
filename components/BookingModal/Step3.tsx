@@ -66,6 +66,8 @@ export default function Step3({ formData, setFormData }: StepProps) {
         }));
     };
 
+    const otherLabel = language === "en" ? "Other" : "Otro";
+
     // Fetch makes on mount
     useEffect(() => {
         setLoadingMakes(true);
@@ -253,6 +255,16 @@ export default function Step3({ formData, setFormData }: StepProps) {
                                             </CommandItem>
                                         );
                                     })}
+                                    <CommandItem
+                                        value={otherLabel}
+                                        onSelect={() => {
+                                            setFormData((prev) => ({ ...prev, year: otherLabel }));
+                                            setOpenYear(false);
+                                        }}
+                                    >
+                                        <Check className={cn("mr-2 h-4 w-4", formData.year === otherLabel ? "opacity-100" : "opacity-0")} />
+                                        {otherLabel}
+                                    </CommandItem>
                                 </CommandGroup>
                             </CommandList>
                         </Command>
@@ -297,6 +309,16 @@ export default function Step3({ formData, setFormData }: StepProps) {
                                             {model.model_name}
                                         </CommandItem>
                                     ))}
+                                    <CommandItem
+                                        value={otherLabel}
+                                        onSelect={() => {
+                                            setFormData((prev) => ({ ...prev, model: otherLabel }));
+                                            setOpenModel(false);
+                                        }}
+                                    >
+                                        <Check className={cn("mr-2 h-4 w-4", formData.model === otherLabel ? "opacity-100" : "opacity-0")} />
+                                        {otherLabel}
+                                    </CommandItem>
                                 </CommandGroup>
                             </CommandList>
                         </Command>
@@ -341,6 +363,16 @@ export default function Step3({ formData, setFormData }: StepProps) {
                                             {trim.model_trim}
                                         </CommandItem>
                                     ))}
+                                    <CommandItem
+                                        value={otherLabel}
+                                        onSelect={() => {
+                                            setFormData((prev) => ({ ...prev, trim: otherLabel }));
+                                            setOpenTrim(false);
+                                        }}
+                                    >
+                                        <Check className={cn("mr-2 h-4 w-4", formData.trim === otherLabel ? "opacity-100" : "opacity-0")} />
+                                        {otherLabel}
+                                    </CommandItem>
                                 </CommandGroup>
                             </CommandList>
                         </Command>
