@@ -13,11 +13,20 @@ import Done from './Done';
 import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { BookingFormData } from "@/types/BookingFormData";
+import { Orbitron } from 'next/font/google';
+import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 
 interface BookingModalProps {
     isOpen: boolean;
     onCloseAction: () => void;
 }
+
+const orbitron = Orbitron({
+    subsets: ['latin'],
+    display: 'swap',
+});
 
 export default function BookingModal({ isOpen, onCloseAction }: BookingModalProps) {
     const [currentStep, setCurrentStep] = useState<number>(0);
@@ -41,9 +50,15 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { language, toggleLanguage } = useLanguage();
+    const { setTheme, resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
 
     const hasCarProblems = formData.reason?.split(", ").includes("Car Problems");
     const totalSteps = hasCarProblems ? 7 : 6;
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const validateStep1 = (): boolean => {
         const name = formData.name.trim();
@@ -183,7 +198,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
         if (currentStep > 1) {
             setCurrentStep(2);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasCarProblems]);
 
     const progressPercent = (currentStep / (totalSteps - 1)) * 100;
@@ -213,17 +228,26 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
             className="fixed inset-0 dark:bg-black bg-white bg-opacity-50 flex justify-center items-center z-50"
         >
             <div
-                className="bg-white rounded-lg w-full max-w-md p-4 sm:p-6 relative shadow-lg dark:bg-neutral-900"
+                className="bg-white rounded-lg w-full max-w-md p-4 sm:p-6 relative shadow-lg dark:bg-neutral-900 border-[0.5]"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="w-full bg-gray-200 dark:bg-neutral-800 h-2 rounded mb-4 overflow-hidden">
                     <div className="h-full transition-all duration-300 rounded" style={{ width: `${progressPercent}%`, backgroundColor: barColor }}></div>
                 </div>
 
-                <div className="flex justify-end mb-2">
+                <div className="flex justify-end space-x-2 mb-2">
                     <button onClick={toggleLanguage} className="border border-green-500 dark:border-green-400 px-2 py-1 rounded text-xs hover:bg-green-500 dark:hover:bg-green-400 hover:text-white dark:hover:text-black transition-colors">
                         {language === "en" ? "ES" : "EN"}
                     </button>
+                    {mounted && (
+                        <button
+                            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                            className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                            aria-label="Toggle Theme"
+                        >
+                            {resolvedTheme === "dark" ? <Sun size={16} className="text-yellow-400" /> : <Moon size={16} className="text-gray-700" />}
+                        </button>
+                    )}
                 </div>
 
                 {renderStep()}
@@ -249,7 +273,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
                     </div>
                 )}
 
-                <div className="mt-2 text-center text-sm">
+                <div className={cn("mt-2 text-center text-sm uppercase font-bold pt-2", orbitron.className)}>
                     <a href="https://vercel.com/benfrank7777s-projects/portafolio/EasU9vZYizNgTQPcdpJxSCGSQELV" className="text-neutral-700 dark:text-neutral-200 hover:underline">
                         powered by Frank
                     </a>
