@@ -14,7 +14,6 @@ model Booking {
   email               String
   phone               String
   reason              String?
-  vehicle             String?
   make                String?
   model               String?
   trim                String?

@@ -13,7 +13,6 @@ const bookingSchema = z.object({
     email: z.string().email(),
     phone: z.string().min(10),
     reason: z.string().optional(),
-    vehicle: z.string().optional(),
     make: z.string().optional(),
     year: z.string().optional(),
     model: z.string().optional(),
@@ -74,7 +73,6 @@ export async function POST(req: Request): Promise<NextResponse> {
                     <li><strong>Email:</strong> ${bookingData.email}</li>
                     <li><strong>Phone:</strong> ${bookingData.phone}</li>
                     <li><strong>Reason:</strong> ${bookingData.reason || 'N/A'}</li>
-                    <li><strong>Vehicle:</strong> ${bookingData.vehicle || 'N/A'}</li>
                     <li><strong>Make:</strong> ${bookingData.make || 'N/A'}</li>
                     <li><strong>Year:</strong> ${bookingData.year || 'N/A'}</li>
                     <li><strong>Model:</strong> ${bookingData.model || 'N/A'}</li>
@@ -105,7 +103,6 @@ export async function POST(req: Request): Promise<NextResponse> {
                         <li><strong>Email:</strong> ${bookingData.email}</li>
                         <li><strong>Phone:</strong> ${bookingData.phone}</li>
                         <li><strong>Reason:</strong> ${bookingData.reason || 'N/A'}</li>
-                        <li><strong>Vehicle:</strong> ${bookingData.vehicle || 'N/A'}</li>
                         <li><strong>Make:</strong> ${bookingData.make || 'N/A'}</li>
                         <li><strong>Year:</strong> ${bookingData.year || 'N/A'}</li>
                         <li><strong>Model:</strong> ${bookingData.model || 'N/A'}</li>

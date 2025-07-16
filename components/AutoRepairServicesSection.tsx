@@ -1,5 +1,3 @@
-// components/AutoRepairServicesSection.tsx
-
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -7,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import {
     Droplet,
-    Wind,
+    BatteryCharging,
     CircleDot,
     Circle,
     Snowflake,
@@ -28,16 +26,16 @@ const services = [
         icon: Droplet,
     },
     {
-        titleEn: "Exhaust & Mufflers",
-        titleEs: "Escape y Silenciadores",
+        titleEn: "Batteries",
+        titleEs: "Baterías",
         descriptionEn:
-            "Mufflers do more than keep your car quiet. Since 1972, we've been the muffler experts.",
+            "We test, install, and replace car batteries to keep your vehicle powered and reliable.",
         descriptionEs:
-            "Los silenciadores hacen más que mantener tu coche silencioso. Desde 1972, somos expertos en silenciadores.",
-        linkLabelEn: "Exhaust & Muffler Services",
-        linkLabelEs: "Servicios de Escape y Silenciadores",
-        link: "/services/exhaust-mufflers",
-        icon: Wind,
+            "Probamos, instalamos y reemplazamos baterías para mantener tu vehículo con energía y confiable.",
+        linkLabelEn: "Battery Services",
+        linkLabelEs: "Servicios de Baterías",
+        link: "/services/batteries",
+        icon: BatteryCharging,
     },
     {
         titleEn: "Brakes",
@@ -121,11 +119,20 @@ export default function AutoRepairServicesSection() {
                                 {language === "en" ? service.descriptionEn : service.descriptionEs}
                             </p>
                             <span className="text-green-600 dark:text-green-400 font-medium underline">
-                {language === "en" ? service.linkLabelEn : service.linkLabelEs}
-              </span>
+                                {language === "en" ? service.linkLabelEn : service.linkLabelEs}
+                            </span>
                         </div>
                     </div>
                 ))}
+            </div>
+
+            <div className="text-center mt-10">
+                <button
+                    onClick={() => router.push("/services")}
+                    className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded transition"
+                >
+                    {language === "en" ? "See All Services" : "Ver Todos los Servicios"}
+                </button>
             </div>
         </section>
     );

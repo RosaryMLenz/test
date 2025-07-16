@@ -39,6 +39,125 @@ import {
 
 const services = [
   {
+    category: "Tires & Wheels",
+    links: [
+      { href: "/services/tires-wheels/car-tires", label: "Car Tires", icon: CircleDot, description: "New & replacement tires" },
+      { href: "/services/tires-wheels/suv-truck-tires", label: "SUV & Truck Tires", icon: Gauge, description: "Heavy-duty tire options" },
+      { href: "/services/tires-wheels/tire-repair", label: "Tire Repair", icon: Wrench, description: "Patch & fix damage" },
+      { href: "/services/tires-wheels/tire-rotation-replacement", label: "Tire Rotation & Replacement", icon: Landmark, description: "Even wear & replacement" },
+      { href: "/services/tires-wheels/wheel-alignment", label: "Wheel Alignment", icon: Workflow, description: "Straighten tracking" },
+      { href: "/services/tires-wheels/wheel-bearings", label: "Wheel Bearings", icon: Fan, description: "Smooth rotation service" },
+      { href: "/services/tires-wheels/wheel-balancing", label: "Wheel Balancing", icon: GaugeCircle, description: "Reduce vibrations" },
+      { href: "/services/tires-wheels/performance-tires", label: "Performance Tires", icon: PlugZap, description: "Grip, style, and handling" },
+    ],
+  },
+  {
+    category: "Batteries",
+    links: [
+      {
+        href: "/services/batteries/alternator-starter-repair",
+        label: "Alternator & Starter Repair",
+        icon: RadioTower,
+        description: "Reliable power systems",
+      },
+      {
+        href: "/services/batteries/car-batteries",
+        label: "Car Batteries",
+        icon: BatteryCharging,
+        description: "Battery testing & replacement",
+      },
+      {
+        href: "/services/batteries/battery-diagnostics",
+        label: "Battery Diagnostics",
+        icon: AlertTriangle,
+        description: "Voltage & performance checks",
+      },
+      {
+        href: "/services/batteries/battery-terminal-cleaning",
+        label: "Battery Terminal Cleaning",
+        icon: Sparkle,
+        description: "Corrosion removal & protection",
+      },
+      {
+        href: "/services/batteries/battery-cable-replacement",
+        label: "Battery Cable Replacement",
+        icon: PlugZap,
+        description: "Replace frayed or damaged cables",
+      },
+      {
+        href: "/services/batteries/charging-system-inspection",
+        label: "Charging System Inspection",
+        icon: Gauge,
+        description: "Check alternator, voltage regulator, belts",
+      },
+      {
+        href: "/services/batteries/battery-installation",
+        label: "Battery Installation",
+        icon: Wrench,
+        description: "Professional install & fitment",
+      },
+      {
+        href: "/services/batteries/battery-recycling",
+        label: "Battery Recycling",
+        icon: Loader,
+        description: "Eco-friendly disposal of old batteries",
+      },
+    ],
+  },
+  {
+    category: "Air Conditioning",
+    links: [
+      {
+        href: "/services/air-conditioning/ac-condensers-evaporators",
+        label: "AC Condensers & Evaporators",
+        icon: Snowflake,
+        description: "AC hardware service",
+      },
+      {
+        href: "/services/air-conditioning/air-conditioning-service",
+        label: "Air Conditioning Service",
+        icon: Fan,
+        description: "Recharge and inspect system",
+      },
+      {
+        href: "/services/air-conditioning/ac-recharge",
+        label: "AC Recharge",
+        icon: Droplet,
+        description: "Refill refrigerant for max cooling",
+      },
+      {
+        href: "/services/air-conditioning/ac-performance-check",
+        label: "AC Performance Check",
+        icon: Gauge,
+        description: "Test output, temperature & pressure",
+      },
+      {
+        href: "/services/air-conditioning/cabin-air-filter-replacement",
+        label: "Cabin Air Filter Replacement",
+        icon: Wind,
+        description: "Clean filter for fresh interior air",
+      },
+      {
+        href: "/services/air-conditioning/ac-compressor-replacement",
+        label: "AC Compressor Replacement",
+        icon: Settings,
+        description: "Fix weak or failed compressors",
+      },
+      {
+        href: "/services/air-conditioning/ac-leak-detection-repair",
+        label: "AC Leak Detection & Repair",
+        icon: AlertTriangle,
+        description: "Find and seal refrigerant leaks",
+      },
+      {
+        href: "/services/air-conditioning/ac-climate-control-diagnostics",
+        label: "Climate Control Diagnostics",
+        icon: Thermometer,
+        description: "Troubleshoot system electronics",
+      },
+    ],
+  },
+  {
     category: "Oil Change Service",
     links: [
       { href: "/services/oil-change-service/air-oil-filters", label: "Air & Oil Filters", icon: Wind, description: "Clean air and oil filtration" },
@@ -62,33 +181,6 @@ const services = [
       { href: "/services/brakes/abs-brakes", label: "ABS Brakes", icon: ShieldCheck, description: "Advanced braking safety" },
       { href: "/services/brakes/brakes", label: "Brake Services", icon: Car, description: "Pads, rotors, inspection" },
       { href: "/services/brakes/oil-antifreeze-brake-fluids", label: "Brake Fluids", icon: Droplet, description: "Hydraulic brake performance" },
-    ],
-  },
-  {
-    category: "Tires & Wheels",
-    links: [
-      { href: "/services/tires-wheels/car-tires", label: "Car Tires", icon: CircleDot, description: "New & replacement tires" },
-      { href: "/services/tires-wheels/suv-truck-tires", label: "SUV & Truck Tires", icon: Gauge, description: "Heavy-duty tire options" },
-      { href: "/services/tires-wheels/tire-repair", label: "Tire Repair", icon: Wrench, description: "Patch & fix damage" },
-      { href: "/services/tires-wheels/tire-rotation-replacement", label: "Tire Rotation & Replacement", icon: Landmark, description: "Even wear & replacement" },
-      { href: "/services/tires-wheels/wheel-alignment", label: "Wheel Alignment", icon: Workflow, description: "Straighten tracking" },
-      { href: "/services/tires-wheels/wheel-bearings", label: "Wheel Bearings", icon: Fan, description: "Smooth rotation service" },
-      { href: "/services/tires-wheels/wheel-balancing", label: "Wheel Balancing", icon: GaugeCircle, description: "Reduce vibrations" },
-      { href: "/services/tires-wheels/performance-tires", label: "Performance Tires", icon: PlugZap, description: "Grip, style, and handling" },
-    ],
-  },
-  {
-    category: "Batteries",
-    links: [
-      { href: "/services/batteries/alternator-starter-repair", label: "Alternator & Starter Repair", icon: RadioTower, description: "Reliable power systems" },
-      { href: "/services/batteries/car-batteries", label: "Car Batteries", icon: BatteryCharging, description: "Battery testing & replacement" },
-    ],
-  },
-  {
-    category: "Air Conditioning",
-    links: [
-      { href: "/services/air-conditioning/ac-condensers-evaporators", label: "AC Condensers & Evaporators", icon: Snowflake, description: "AC hardware service" },
-      { href: "/services/air-conditioning/air-conditioning-service", label: "Air Conditioning Service", icon: Fan, description: "Recharge and inspect system" },
     ],
   },
   {
@@ -145,7 +237,60 @@ const services = [
   {
     category: "EV Maintenance",
     links: [
-      { href: "/services/ev-maintenance/ev-services", label: "EV Services", icon: BatteryCharging, description: "Electric & hybrid repair" },
+      {
+        href: "/services/ev-maintenance/ev-services",
+        label: "EV Services",
+        icon: BatteryCharging,
+        description: "Electric & hybrid repair",
+      },
+      {
+        href: "/services/ev-maintenance/high-voltage-battery-inspection",
+        label: "High Voltage Battery Inspection",
+        icon: Gauge,
+        description: "Check charge capacity & health",
+      },
+      {
+        href: "/services/ev-maintenance/ev-charging-port-diagnostics",
+        label: "Charging Port Diagnostics",
+        icon: PlugZap,
+        description: "Fix slow or non-working chargers",
+      },
+      {
+        href: "/services/ev-maintenance/ev-brake-service",
+        label: "EV Brake Service",
+        icon: ShieldCheck,
+        description: "Service regenerative & hydraulic brakes",
+      },
+      {
+        href: "/services/ev-maintenance/software-updates",
+        label: "EV Software Updates",
+        icon: Settings,
+        description: "Ensure latest system features & fixes",
+      },
+      {
+        href: "/services/ev-maintenance/coolant-system-flush-ev",
+        label: "Coolant System Flush",
+        icon: Thermometer,
+        description: "Maintain battery & motor temperature",
+      },
+      {
+        href: "/services/ev-maintenance/inverter-inspection",
+        label: "Inverter Inspection",
+        icon: Zap,
+        description: "Ensure smooth power delivery",
+      },
+      {
+        href: "/services/ev-maintenance/ev-suspension-inspection",
+        label: "EV Suspension Inspection",
+        icon: Fan,
+        description: "Check ride stability & cornering",
+      },
+      {
+        href: "/services/ev-maintenance/ev-tire-rotation",
+        label: "EV Tire Rotation",
+        icon: CircleDot,
+        description: "Even out EV-specific tire wear",
+      },
     ],
   },
 ];
@@ -164,7 +309,7 @@ export default function ServicesPage() {
           {services.map(({ category, links }) => (
             <Card
               key={category}
-              className="flex flex-col justify-between border border-neutral-200 dark:border-neutral-800 hover:shadow-md transition-shadow"
+              className="flex flex-col justify-items-start border border-neutral-200 dark:border-neutral-800 hover:shadow-md transition-shadow"
             >
               <CardHeader>
                 <CardTitle className="text-xl text-green-600 dark:text-green-400">
