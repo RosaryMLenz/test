@@ -1,5 +1,13 @@
 "use client";
 
+import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
 import {
   Droplet,
   Settings,
@@ -29,7 +37,6 @@ import {
   AlertOctagon, Calendar,
 } from "lucide-react";
 
-// Define full services with icons + descriptions
 const services = [
   {
     category: "Oil Change Service",
@@ -143,4 +150,53 @@ const services = [
   },
 ];
 
-export default services;
+export default function ServicesPage() {
+  const { language } = useLanguage();
+
+  return (
+    <div className="min-h-[90vh] bg-white dark:bg-black text-black dark:text-white py-10 px-6">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl sm:text-5xl font-bold text-center mb-12 text-green-600 dark:text-green-400">
+          {language === "en" ? "Our Services" : "Nuestros Servicios"}
+        </h1>
+
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {services.map(({ category, links }) => (
+            <Card
+              key={category}
+              className="flex flex-col justify-between border border-neutral-200 dark:border-neutral-800 hover:shadow-md transition-shadow"
+            >
+              <CardHeader>
+                <CardTitle className="text-xl text-green-600 dark:text-green-400">
+                  {category}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-4">
+                  {links.map(({ href, label, icon: Icon, description }) => (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        className="flex items-start gap-3 group"
+                      >
+                        <Icon className="w-5 h-5 mt-1 text-green-500 dark:text-green-400 flex-shrink-0" />
+                        <div>
+                          <span className="block font-medium text-neutral-900 dark:text-neutral-100 group-hover:underline">
+                            {label}
+                          </span>
+                          <span className="block text-sm text-neutral-600 dark:text-neutral-400">
+                            {description}
+                          </span>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
