@@ -20,7 +20,7 @@ export default function Step4({ formData, setFormData }: StepProps) {
     const today = dayjs();
     const [weekOffset, setWeekOffset] = useState(0);
     const [selectedDate, setSelectedDate] = useState<string | null>(formData.date || null);
-    const [selectedTime, setSelectedTime] = useState<string | undefined>(formData.time || undefined);
+    const [selectedTime, setSelectedTime] = useState<string>(formData.time);
     const [bookedTimes, setBookedTimes] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -30,8 +30,8 @@ export default function Step4({ formData, setFormData }: StepProps) {
         if (date.isBefore(today, "day") || date.day() === 0) return;
         const dateStr = date.format("YYYY-MM-DD");
         if (dateStr !== selectedDate) {
-            setSelectedTime(undefined);
-            setFormData((prev) => ({ ...prev, time: undefined }));
+            setSelectedTime("");
+            setFormData((prev) => ({ ...prev, time: "" }));
         }
         setSelectedDate(dateStr);
         setFormData((prev) => ({ ...prev, date: dateStr }));
@@ -89,8 +89,8 @@ export default function Step4({ formData, setFormData }: StepProps) {
 
     useEffect(() => {
         if (selectedTime && bookedTimes.includes(selectedTime)) {
-            setSelectedTime(undefined);
-            setFormData((prev) => ({ ...prev, time: undefined }));
+            setSelectedTime("");
+            setFormData((prev) => ({ ...prev, time: "" }));
             toast(
                 language === "en"
                     ? "Your previously selected time is no longer available."
