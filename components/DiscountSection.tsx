@@ -1,7 +1,7 @@
-
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const slides = [
     "/discount-slides/slide1.jpg",
@@ -23,6 +23,7 @@ interface DiscountSectionProps {
 }
 
 export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
+    const { language } = useLanguage();
     const [current, setCurrent] = useState(0);
 
     const totalPairs = Math.ceil(slides.length / 2);
@@ -45,10 +46,12 @@ export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
     return (
         <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-green-700 dark:text-green-300 mb-4">
-                July Special: 15% Off Oil Changes!
+                {language === "en" ? "July Special: 15% Off Oil Changes!" : "¡Especial de Julio: 15% de Descuento en Cambios de Aceite!"}
             </h2>
             <p className="text-center text-green-600 dark:text-green-300 mb-8 max-w-xl mx-auto">
-                Book your oil change before July 31 to save 15% on your next service with Rainforest Automotive.
+                {language === "en"
+                    ? "Book your oil change before July 31 to save 15% on your next service with Rainforest Automotive."
+                    : "Reserve su cambio de aceite antes del 31 de julio para ahorrar 15% en su próximo servicio con Rainforest Automotive."}
             </p>
 
             {/* Slideshow */}
@@ -63,7 +66,7 @@ export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
                                     {first && (
                                         <Image
                                             src={first}
-                                            alt={`Slide ${idx * 2 + 1}`}
+                                            alt={language === "en" ? `Slide ${idx * 2 + 1}` : `Diapositiva ${idx * 2 + 1}`}
                                             fill
                                             className="object-cover object-center"
                                             priority={idx === current}
@@ -74,7 +77,7 @@ export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
                                     <div className="relative w-full md:w-1/2 aspect-video md:aspect-video">
                                         <Image
                                             src={second}
-                                            alt={`Slide ${idx * 2 + 2}`}
+                                            alt={language === "en" ? `Slide ${idx * 2 + 2}` : `Diapositiva ${idx * 2 + 2}`}
                                             fill
                                             className="object-cover object-center"
                                             priority={idx === current}
@@ -90,14 +93,14 @@ export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
                 <button
                     onClick={prevSlide}
                     className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition"
-                    aria-label="Previous Slide"
+                    aria-label={language === "en" ? "Previous Slide" : "Diapositiva Anterior"}
                 >
                     <ChevronLeft size={24} />
                 </button>
                 <button
                     onClick={nextSlide}
                     className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition"
-                    aria-label="Next Slide"
+                    aria-label={language === "en" ? "Next Slide" : "Siguiente Diapositiva"}
                 >
                     <ChevronRight size={24} />
                 </button>
@@ -108,7 +111,7 @@ export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
                     onClick={onBookClick}
                     className="px-6 py-3 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition"
                 >
-                    Book Now and Save
+                    {language === "en" ? "Book Now and Save" : "Reserve Ahora y Ahorre"}
                 </button>
             </div>
         </section>
