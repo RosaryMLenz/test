@@ -76,7 +76,10 @@ export default function Step2({ formData, setFormData }: StepProps) {
                                         : "border-gray-300 hover:bg-gray-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
                                 )}
                             >
-                                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-blue-600">
+                                <div className={cn(
+                                    "flex-shrink-0 w-12 h-12 flex items-center justify-center",
+                                    key === "Car Problems" ? "text-red-600" : "text-blue-600"
+                                )}>
                                     <Icon size={28} />
                                 </div>
                                 <div className="ml-4 flex flex-col">
@@ -109,7 +112,10 @@ export default function Step2({ formData, setFormData }: StepProps) {
                                         : "border-gray-300 hover:bg-gray-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
                                 )}
                             >
-                                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-blue-600">
+                                <div className={cn(
+                                    "flex-shrink-0 w-12 h-12 flex items-center justify-center",
+                                    key === "Car Problems" ? "text-red-600" : "text-blue-600"
+                                )}>
                                     <Icon size={28} />
                                 </div>
                                 <div className="ml-4 flex flex-col">
