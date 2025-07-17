@@ -14,12 +14,12 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
     title: 'Rainforest Automotive',
     description:
-        'Rainforest Automotive: Reliable, affordable mechanic services in Miami, FL. Book oil changes, brake repairs, diagnostics, and more with transparent pricing and fast service.',
+        'Rainforest Automotive: Reliable, affordable mechanic services in Las Vegas, NV. Book oil changes, brake repairs, diagnostics, and more with transparent pricing and fast service.',
     openGraph: {
         title: 'Rainforest Automotive',
         description:
-            'Reliable mechanic services in Miami, FL. Book oil changes, brake repairs, and diagnostics easily online!',
-        url: 'https://rainforestautomotive.work', // Replace with your deployed URL
+            'Reliable mechanic services in Las Vegas, NV. Book oil changes, brake repairs, and diagnostics easily online!',
+        url: 'https://rainforest21automotive.com',
         siteName: 'Rainforest Automotive',
         locale: 'en_US',
         type: 'website',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Rainforest Automotive',
         description:
-            'Miamis trusted auto repair and mechanic service. Book online for quick, quality repairs.',
+            'Las Vegas trusted auto repair and mechanic service. Book online for quick, quality repairs.',
     },
 };
 
@@ -52,14 +52,14 @@ export default function RootLayout({
                         '@type': 'AutoRepair',
                         name: 'Rainforest Automotive',
                         description:
-                            'Reliable mechanic services in Miami, FL, including oil changes, brakes, and diagnostics.',
+                            'Reliable mechanic services in Las Vegas, NV, including oil changes, brakes, and diagnostics.',
                         address: {
                             '@type': 'PostalAddress',
-                            addressLocality: 'Miami',
-                            addressRegion: 'FL',
+                            addressLocality: 'Las Vegas',
+                            addressRegion: 'NV',
                         },
-                        telephone: '+1-702-834-9385', // Replace with shop phone
-                        url: 'https://rainforestautomotive.work', // Replace with deployed URL
+                        telephone: '+1-702-762-7573', // Replace with shop phone
+                        url: 'https://rainforest21automotive.com', // Replace with deployed URL
                     }),
                 }}
             />

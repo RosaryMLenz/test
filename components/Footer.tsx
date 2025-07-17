@@ -60,18 +60,18 @@ const Footer = () => {
                         <li>Las Vegas, NV</li>
                         <li>
                             <a
-                                href="tel:+17028349385"
+                                href="tel:+1-702-762-7573"
                                 className="hover:text-green-500 dark:hover:text-green-400 transition-colors"
                             >
-                                +1 (702) 834-9385
+                                +1-702-762-7573
                             </a>
                         </li>
                         <li>
                             <a
-                                href="mailto:info@rainforestautomotive.work"
+                                href="mailto:info@rainforest21automotive.com"
                                 className="hover:text-green-500 dark:hover:text-green-400 transition-colors"
                             >
-                                info@rainforestautomotive.work
+                                info@rainforest21automotive.com
                             </a>
                         </li>
                     </ul>
