@@ -4,7 +4,7 @@ export interface BookingFormData {
     name: string;
     email: string;
     phone: string;
-    reason: string;
+    reason?: string | null;
     make: string; // New
     year: string;
     model: string; // New
