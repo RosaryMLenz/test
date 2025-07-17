@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 export default function AdminAccountPage() {
-    const [initialEmail, setInitialEmail] = useState("");
+    const router = useRouter();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,8 +21,11 @@ export default function AdminAccountPage() {
             try {
                 const res = await fetch("/api/admin/account");
                 const data = await res.json();
-                setInitialEmail(data.email);
                 setEmail(data.email);
+
+                // ✅ Clear password fields when opening the account page
+                setPassword("");
+                setConfirmPassword("");
             } catch (err) {
                 console.error("Error:", err);
                 toast.error("Error updating account");
@@ -55,7 +60,6 @@ export default function AdminAccountPage() {
             }
 
             toast.success("Account updated");
-            setInitialEmail(email);
             setPassword("");
             setConfirmPassword("");
         } catch (err) {
@@ -67,20 +71,20 @@ export default function AdminAccountPage() {
     };
 
     const handleCancel = () => {
-        setEmail(initialEmail);
-        setPassword("");
-        setConfirmPassword("");
+        // ✅ Redirect to dashboard on cancel
+        router.push("/admin/dashboard");
     };
 
     return (
         <div className="max-w-md mx-auto mt-10 space-y-6">
+
+
             <h1 className="text-2xl font-bold text-center">Admin Account</h1>
 
             <div className="flex flex-col gap-4 space-y-4">
+                {/* Email */}
                 <div>
-                    <Label htmlFor="email" className="pb-2">
-                        Email
-                    </Label>
+                    <Label htmlFor="email" className="pb-2">Email</Label>
                     <Input
                         id="email"
                         type="email"
@@ -90,10 +94,9 @@ export default function AdminAccountPage() {
                     />
                 </div>
 
+                {/* Password */}
                 <div>
-                    <Label htmlFor="password" className="pb-2">
-                        New Password
-                    </Label>
+                    <Label htmlFor="password" className="pb-2">New Password</Label>
                     <Input
                         id="password"
                         type="password"
@@ -104,10 +107,9 @@ export default function AdminAccountPage() {
                     />
                 </div>
 
+                {/* Confirm Password */}
                 <div>
-                    <Label htmlFor="confirmPassword" className="pb-2">
-                        Confirm New Password
-                    </Label>
+                    <Label htmlFor="confirmPassword" className="pb-2">Confirm New Password</Label>
                     <Input
                         id="confirmPassword"
                         type="password"
@@ -117,6 +119,7 @@ export default function AdminAccountPage() {
                     />
                 </div>
 
+                {/* Submit / Cancel */}
                 <div className="flex gap-2">
                     <Button className="flex-1" onClick={handleSubmit} disabled={loading}>
                         {loading ? "Saving..." : "Save Changes"}
@@ -131,7 +134,13 @@ export default function AdminAccountPage() {
                         Cancel
                     </Button>
                 </div>
+                <div className="flex justify-start">
+                    <Button variant="secondary" onClick={() => router.push("/admin/dashboard")}>
+                        ← Back to Dashboard
+                    </Button>
+                </div>
             </div>
         </div>
+
     );
 }
