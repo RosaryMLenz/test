@@ -1,7 +1,5 @@
-// lib/actions/getBookings.ts
-
 import { prisma } from "@/lib/prisma";
-import { Booking } from "@/types/BookingFormData"; // Confirm your Booking type aligns with your Prisma model
+import { Booking } from "@/lib/generated/prisma"; // 👈 This matches your `output` config
 
 export async function getBookings(): Promise<Booking[]> {
     try {
