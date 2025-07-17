@@ -58,7 +58,7 @@ export default function Step3DropOff({ formData, setFormData }: StepProps) {
                     type="text"
                     id="vehicle"
                     placeholder={language === "en" ? "Toyota Camry" : "Toyota Camry"}
-                    value={formData.vehicle || ""}
+                    value={formData.make || ""}
                     onChange={(e) =>
                         setFormData((prev) => ({
                             ...prev,

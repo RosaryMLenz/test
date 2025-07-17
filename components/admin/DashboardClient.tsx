@@ -54,7 +54,7 @@ export default function DashboardClient() {
     const [sorting, setSorting] = useState<SortingState>([{ id: "date", desc: false }]);
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
-        pageSize: 20,
+        pageSize: 13,
     });
 
     useEffect(() => {
