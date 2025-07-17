@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Booking } from "@/types/BookingFormData";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function EditBookingPage() {
     const { id } = useParams();
@@ -67,7 +68,7 @@ export default function EditBookingPage() {
                     <Input
                         id="name"
                         value={booking.name}
-                        onChange={(e) => handleChange("name", e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("name", e.target.value)}
                     />
                 </div>
 
@@ -77,7 +78,7 @@ export default function EditBookingPage() {
                         id="email"
                         type="email"
                         value={booking.email}
-                        onChange={(e) => handleChange("email", e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("email", e.target.value)}
                     />
                 </div>
 
@@ -86,7 +87,61 @@ export default function EditBookingPage() {
                     <Input
                         id="phone"
                         value={booking.phone}
-                        onChange={(e) => handleChange("phone", e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("phone", e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor="reason" className="pb-2">Reason</Label>
+                    <Input
+                        id="reason"
+                        value={booking.reason ?? ""}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("reason", e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor="make" className="pb-2">Make</Label>
+                    <Input
+                        id="make"
+                        value={booking.make ?? ""}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("make", e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor="year" className="pb-2">Year</Label>
+                    <Input
+                        id="year"
+                        value={booking.year ?? ""}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("year", e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor="model" className="pb-2">Model</Label>
+                    <Input
+                        id="model"
+                        value={booking.model ?? ""}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("model", e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor="trim" className="pb-2">Trim</Label>
+                    <Input
+                        id="trim"
+                        value={booking.trim ?? ""}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("trim", e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor="problemDescription" className="pb-2">Problem Description</Label>
+                    <Textarea
+                        id="problemDescription"
+                        value={booking.problemDescription ?? ""}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChange("problemDescription", e.target.value)}
                     />
                 </div>
 
@@ -96,7 +151,7 @@ export default function EditBookingPage() {
                         id="date"
                         type="date"
                         value={booking.date ?? ""}
-                        onChange={(e) => handleChange("date", e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("date", e.target.value)}
                     />
                 </div>
 
@@ -106,7 +161,25 @@ export default function EditBookingPage() {
                         id="time"
                         type="text"
                         value={booking.time ?? ""}
-                        onChange={(e) => handleChange("time", e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("time", e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor="additionalDetails" className="pb-2">Additional Details</Label>
+                    <Textarea
+                        id="additionalDetails"
+                        value={booking.additionalDetails ?? ""}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChange("additionalDetails", e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <Label htmlFor="dropOffOrWait" className="pb-2">Drop Off or Wait</Label>
+                    <Input
+                        id="dropOffOrWait"
+                        value={booking.dropOffOrWait ?? ""}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("dropOffOrWait", e.target.value)}
                     />
                 </div>
 

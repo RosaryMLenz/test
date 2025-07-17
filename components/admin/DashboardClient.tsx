@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Booking } from "@/types/BookingFormData";
 import Sidebar from "@/components/admin/Sidebar";
 import { MoreVertical, Menu, X } from "lucide-react";
@@ -24,8 +24,24 @@ import {
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-
-const BOOKINGS_PER_PAGE = 10;
+import {
+    ColumnDef,
+    SortingState,
+    flexRender,
+    getCoreRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    useReactTable,
+    PaginationState,
+} from "@tanstack/react-table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 
 export default function DashboardClient() {
     const router = useRouter();
@@ -33,10 +49,13 @@ export default function DashboardClient() {
     const [loading, setLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [deleteId, setDeleteId] = useState<string | null>(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [showBulkDelete, setShowBulkDelete] = useState(false);
     const [bulkDeleting, setBulkDeleting] = useState(false);
+    const [sorting, setSorting] = useState<SortingState>([{ id: "date", desc: false }]);
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 20,
+    });
 
     useEffect(() => {
         const loadBookings = async () => {
@@ -68,126 +87,172 @@ export default function DashboardClient() {
 
     const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-    const paginatedBookings = bookings.slice(
-        (currentPage - 1) * BOOKINGS_PER_PAGE,
-        currentPage * BOOKINGS_PER_PAGE
-    );
+    const columns: ColumnDef<Booking>[] = useMemo(() => [
+        {
+            id: "select",
+            header: ({ table }) => (
+                <Checkbox
+                    checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label="Select all"
+                />
+            ),
+            cell: ({ row }) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+        },
+        { accessorKey: "name", header: "Name" },
+        { accessorKey: "email", header: "Email" },
+        { accessorKey: "phone", header: "Phone" },
+        { accessorKey: "reason", header: "Reason", cell: ({ row }) => row.original.reason || "N/A" },
+        { accessorKey: "make", header: "Make", cell: ({ row }) => row.original.make || "N/A" },
+        { accessorKey: "year", header: "Year", cell: ({ row }) => row.original.year || "N/A" },
+        { accessorKey: "model", header: "Model", cell: ({ row }) => row.original.model || "N/A" },
+        { accessorKey: "trim", header: "Trim", cell: ({ row }) => row.original.trim || "N/A" },
+        { accessorKey: "problemDescription", header: "Problem Description", cell: ({ row }) => row.original.problemDescription || "N/A" },
+        {
+            accessorKey: "date",
+            header: "Date",
+            cell: ({ row }) => row.original.date || "N/A",
+            sortingFn: (rowA, rowB, columnId) => {
+                const dateA = new Date(rowA.getValue(columnId) as string);
+                const dateB = new Date(rowB.getValue(columnId) as string);
+                return dateA.getTime() - dateB.getTime();
+            },
+        },
+        { accessorKey: "time", header: "Time", cell: ({ row }) => row.original.time || "N/A" },
+        { accessorKey: "additionalDetails", header: "Additional Details", cell: ({ row }) => row.original.additionalDetails || "N/A" },
+        { accessorKey: "dropOffOrWait", header: "Drop Off or Wait", cell: ({ row }) => row.original.dropOffOrWait || "N/A" },
+        {
+            id: "actions",
+            header: "Actions",
+            cell: ({ row }) => (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreVertical className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => router.push(`/admin/bookings/${row.original.id}/edit`)}>
+                            Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setDeleteId(row.original.id)}>
+                            Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            ),
+        },
+    ], [router]);
 
-    const totalPages = Math.ceil(bookings.length / BOOKINGS_PER_PAGE);
+    const table = useReactTable({
+        data: bookings,
+        columns,
+        onSortingChange: setSorting,
+        onPaginationChange: setPagination,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        state: { sorting, pagination },
+    });
+
+    const handleBulkDelete = async () => {
+        setBulkDeleting(true);
+        try {
+            const ids = table.getSelectedRowModel().rows.map((row) => row.original.id);
+            await Promise.all(ids.map((id) => fetch(`/api/bookings/${id}`, { method: "DELETE" })));
+            setBookings((prev) => prev.filter((b) => !ids.includes(b.id)));
+            table.resetRowSelection();
+            toast.success("Selected bookings deleted");
+        } catch (err) {
+            console.error("Bulk delete error:", err);
+            toast.error("Failed to delete selected bookings");
+        } finally {
+            setShowBulkDelete(false);
+            setBulkDeleting(false);
+        }
+    };
+
+    if (loading) return <Skeleton className="h-screen w-full" />;
 
     return (
-        <div className="flex min-h-screen">
-            {sidebarOpen && <Sidebar />}
-            <main className="flex-1 p-6 dark:bg-black bg-white">
-                <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">
-                        Bookings
-                    </h1>
-                    <Button onClick={toggleSidebar} size="icon" variant="outline">
+        <div className="flex h-screen bg-white dark:bg-black">
+            {sidebarOpen && (
+                <aside className="w-64 flex-shrink-0 overflow-y-auto border-r">
+                    <Sidebar />
+                </aside>
+            )}
+            <div className="flex flex-col flex-1 overflow-hidden">
+                <header className="flex h-16 items-center justify-between border-b px-6">
+                    <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">Bookings</h1>
+                    <Button variant="outline" size="icon" onClick={toggleSidebar}>
                         {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                     </Button>
-                </div>
-                {loading ? (
-                    <Skeleton className="h-96 w-full" />
-                ) : (
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full border-collapse">
-                            <thead>
-                            <tr className="border-b dark:border-neutral-700">
-                                <th className="text-left p-2">Select</th>
-                                <th className="text-left p-2">Name</th>
-                                <th className="text-left p-2">Email</th>
-                                <th className="text-left p-2">Phone</th>
-                                <th className="text-left p-2">Date</th>
-                                <th className="text-left p-2">Time</th>
-                                <th className="text-left p-2">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {paginatedBookings.map((booking) => (
-                                <tr
-                                    key={booking.id}
-                                    className="border-b dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                                >
-                                    <td className="p-2">
-                                        <Checkbox
-                                            checked={selectedIds.includes(booking.id)}
-                                            onCheckedChange={(checked) => {
-                                                setSelectedIds((prev) =>
-                                                    checked
-                                                        ? [...prev, booking.id]
-                                                        : prev.filter((id) => id !== booking.id)
-                                                );
-                                            }}
-                                        />
-                                    </td>
-                                    <td className="p-2">{booking.name}</td>
-                                    <td className="p-2">{booking.email}</td>
-                                    <td className="p-2">{booking.phone}</td>
-                                    <td className="p-2">{booking.date}</td>
-                                    <td className="p-2">{booking.time}</td>
-                                    <td className="p-2">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button size="icon" variant="ghost">
-                                                    <MoreVertical size={18} />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuItem
-                                                    onClick={() =>
-                                                        router.push(`/admin/bookings/${booking.id}/edit`)
-                                                    }
-                                                >
-                                                    Edit
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() => setDeleteId(booking.id)}
-                                                >
-                                                    Delete
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-
-                        {totalPages > 1 && (
-                            <div className="flex justify-between items-center mt-4 gap-2">
-                                <Button
-                                    variant="destructive"
-                                    disabled={selectedIds.length === 0}
-                                    onClick={() => setShowBulkDelete(true)}
-                                >
-                                    🗑 Delete {selectedIds.length} selected
-                                </Button>
-
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        variant="outline"
-                                        disabled={currentPage === 1}
-                                        onClick={() => setCurrentPage((p) => p - 1)}
-                                    >
-                                        Prev
-                                    </Button>
-                                    <span className="text-sm text-neutral-600 dark:text-neutral-300">
-                                        Page {currentPage} of {totalPages}
-                                    </span>
-                                    <Button
-                                        variant="outline"
-                                        disabled={currentPage === totalPages}
-                                        onClick={() => setCurrentPage((p) => p + 1)}
-                                    >
-                                        Next
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
+                </header>
+                <main className="flex-1 overflow-auto p-6">
+                    <div className="min-w-full overflow-x-auto">
+                        <div className="min-w-[1600px]">
+                            <Table className="w-full table-auto">
+                                <TableHeader className="sticky top-0 bg-background z-10">
+                                    {table.getHeaderGroups().map((headerGroup) => (
+                                        <TableRow key={headerGroup.id}>
+                                            {headerGroup.headers.map((header) => (
+                                                <TableHead key={header.id}>
+                                                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                                </TableHead>
+                                            ))}
+                                        </TableRow>
+                                    ))}
+                                </TableHeader>
+                                <TableBody>
+                                    {table.getRowModel().rows.length ? (
+                                        table.getRowModel().rows.map((row) => (
+                                            <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id}>
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={columns.length} className="h-24 text-center">
+                                                No results.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
                     </div>
-                )}
-            </main>
+
+                    <div className="flex justify-between items-center mt-4 gap-2">
+                        <Button variant="destructive" disabled={!table.getSelectedRowModel().rows.length} onClick={() => setShowBulkDelete(true)}>
+                            🗑 Delete {table.getSelectedRowModel().rows.length} selected
+                        </Button>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}>
+                                Prev
+                            </Button>
+                            <span className="text-sm text-neutral-600 dark:text-neutral-300">
+                Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              </span>
+                            <Button variant="outline" disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
+                                Next
+                            </Button>
+                        </div>
+                    </div>
+                </main>
+            </div>
 
             {/* Single Delete Confirmation */}
             <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
@@ -212,34 +277,11 @@ export default function DashboardClient() {
                         <AlertDialogTitle>Delete selected bookings?</AlertDialogTitle>
                     </AlertDialogHeader>
                     <p className="text-sm text-neutral-500">
-                        Are you sure you want to delete {selectedIds.length} booking(s)? This cannot be undone.
+                        Are you sure you want to delete {table.getSelectedRowModel().rows.length} booking(s)? This cannot be undone.
                     </p>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            disabled={bulkDeleting}
-                            onClick={async () => {
-                                setBulkDeleting(true);
-                                try {
-                                    await Promise.all(
-                                        selectedIds.map((id) =>
-                                            fetch(`/api/bookings/${id}`, { method: "DELETE" })
-                                        )
-                                    );
-                                    setBookings((prev) =>
-                                        prev.filter((b) => !selectedIds.includes(b.id))
-                                    );
-                                    setSelectedIds([]);
-                                    toast.success("Selected bookings deleted");
-                                } catch (err) {
-                                    console.error("Bulk delete error:", err);
-                                    toast.error("Failed to delete selected bookings");
-                                } finally {
-                                    setShowBulkDelete(false);
-                                    setBulkDeleting(false);
-                                }
-                            }}
-                        >
+                        <AlertDialogAction disabled={bulkDeleting} onClick={handleBulkDelete}>
                             {bulkDeleting ? "Deleting..." : "Delete"}
                         </AlertDialogAction>
                     </AlertDialogFooter>

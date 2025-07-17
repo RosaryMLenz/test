@@ -1,16 +1,20 @@
+// Sidebar.tsx
 "use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useState } from "react";
-import { User, MoreVertical } from "lucide-react";
+import { useState, useEffect } from "react";
+import {LayoutDashboard, Moon, Sun, LogOut, Settings, MoreVertical} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuTrigger,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
     AlertDialog,
@@ -25,6 +29,25 @@ import {
 export default function Sidebar() {
     const router = useRouter();
     const [showConfirm, setShowConfirm] = useState(false);
+    const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+        if (savedTheme) {
+            setTheme(savedTheme);
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setTheme('dark');
+            document.documentElement.classList.add('dark');
+        }
+    }, []);
+
+    const toggleTheme = () => {
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+        localStorage.setItem('theme', newTheme);
+    };
 
     const handleLogout = async () => {
         await signOut({ redirect: false });
@@ -32,51 +55,60 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="w-64 bg-neutral-900 text-white h-full flex flex-col justify-between">
-            {/* Header */}
-            <div className="p-6 border-b border-neutral-700">
-                <h2 className="text-xl font-bold tracking-wide">Rainforest21</h2>
-            </div>
-
-            {/* Nav */}
-            <nav className="flex flex-col gap-2 p-6">
-                <Link
-                    href="/admin/dashboard"
-                    className="hover:text-green-400 transition"
-                >
-                    Dashboard
+        <div className="flex w-64 flex-col border-r bg-background">
+            <nav className="flex flex-col gap-4 py-5 px-2 sm:py-5">
+                <Link href="/admin/dashboard" className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
+                    <LayoutDashboard className="h-4 w-4 transition-all group-hover:scale-110" />
+                    <span className="sr-only">Rainforest Automotive</span>
                 </Link>
+                <Button variant="ghost" className="w-full justify-start" asChild>
+                    <Link href="/admin/dashboard">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Dashboard
+                    </Link>
+                </Button>
+                {/* Add more navigation items if needed */}
+            </nav>
+            <nav className="mt-auto flex flex-col gap-4 px-2 sm:py-5">
+                <div className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src="" alt="Admin" />
+                        <AvatarFallback>AD</AvatarFallback>
+                    </Avatar>
+                    <span>Admin</span>
+                    <Button
+                        variant="ghost"
+                        className="ml-auto h-8 w-8"
+                        size="icon"
+                        onClick={toggleTheme}
+                    >
+                        {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                        <span className="sr-only">Toggle theme</span>
+                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8" size="icon">
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only">More</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => router.push("/admin/account")}>
+                                <Settings className="mr-2 h-4 w-4" />
+                                Account
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setShowConfirm(true)}>
+                                <LogOut className="mr-2 h-4 w-4" />
+                                Sign Out
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             </nav>
 
-            {/* Footer Admin Dropdown */}
-            <div className="p-4 border-t border-neutral-700 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <User size={20} />
-                    <span className="text-sm">Admin</span>
-                </div>
-
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="text-white hover:bg-neutral-800"
-                        >
-                            <MoreVertical size={18} />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => router.push("/admin/account")}>
-                            Account
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setShowConfirm(true)}>
-                            Sign Out
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-
-            {/* Logout Confirmation Dialog (outside dropdown!) */}
+            {/* Logout Confirmation Dialog */}
             <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -93,6 +125,6 @@ export default function Sidebar() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </aside>
+        </div>
     );
 }

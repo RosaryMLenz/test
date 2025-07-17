@@ -2,13 +2,11 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-//import NavBar from '@/components/NavBar';
-import Footer from '@/components/Footer';
 import React from 'react';
 import { Toaster } from 'sonner';
 import {Providers} from "@/app/providers";
 import { LanguageProvider } from "@/context/LanguageContext";
-import StickyNavWrapper from '@/components/StickyNavWrapper';
+import ClientWrapper from '@/app/ClientWrapper'; // Import the new client component
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -70,16 +68,10 @@ export default function RootLayout({
         <body className={inter.className}>
         <Providers>
             <LanguageProvider>
-                <StickyNavWrapper />
-
-                {/* Add padding-top to account for fixed navbar */}
-                <main className="pt-16">
+                <ClientWrapper>
                     <Toaster position="top-center" />
                     {children}
-                </main>
-                <footer>
-                    <Footer />
-                </footer>
+                </ClientWrapper>
             </LanguageProvider>
         </Providers>
         </body>

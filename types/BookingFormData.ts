@@ -16,7 +16,6 @@ export interface BookingFormData {
     acceptTerms: boolean;
     enableNotifications: boolean;
     dropOffOrWait: string;
-    vehicle?: string; // Optional, can compute as `${make} ${model}` if needed
 }
 
 export interface Booking {
@@ -25,8 +24,10 @@ export interface Booking {
     email: string;
     phone: string;
     reason?: string | null;
-    vehicle?: string | null;
-    year?: string | null;
+    make: string; // New
+    year: string;
+    model: string; // New
+    trim: string; // New
     problemDescription?: string | null;
     date?: string | null;
     time?: string | null;
