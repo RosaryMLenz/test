@@ -87,6 +87,9 @@ const Footer = () => {
                         <a href="#" aria-label="WhatsApp" className="hover:text-green-500 dark:hover:text-green-400 transition-colors">
                             WA
                         </a>
+                        <a href="#" aria-label="TikTok" className="hover:text-green-500 dark:hover:text-green-400 transition-colors">
+                            TK
+                        </a>
                     </div>
                 </div>
             </div>
