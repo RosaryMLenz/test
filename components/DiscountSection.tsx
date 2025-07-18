@@ -46,7 +46,8 @@ export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
     const now = new Date();
     const month = new Intl.DateTimeFormat(language === "en" ? "en-US" : "es-ES", {
         month: "long",
-    }).format(now); // e.g., "July" or "julio"
+    }).format(now);
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
 
     return (
         <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -57,8 +58,8 @@ export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
             </h2>
             <p className="text-center text-green-600 dark:text-green-300 mb-8 max-w-xl mx-auto">
                 {language === "en"
-                    ? `Book your oil change before ${month} 31 to save 15% on your next service with Rainforest Automotive.`
-                    : `Reserve su cambio de aceite antes del 31 de ${month} para ahorrar 15% en su próximo servicio con Rainforest Automotive.`}
+                    ? `Book your oil change before ${month} ${lastDay} to save 15% on your next service with Rainforest Automotive.`
+                    : `Reserve su cambio de aceite antes del ${lastDay} de ${month} para ahorrar 15% en su próximo servicio con Rainforest Automotive.`}
             </p>
 
             {/* Slideshow */}
