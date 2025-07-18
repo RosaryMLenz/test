@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Booking } from "@/types/BookingFormData";
 import Sidebar from "@/components/admin/Sidebar";
@@ -56,21 +57,39 @@ export default function DashboardClient() {
         pageIndex: 0,
         pageSize: 13,
     });
+    const searchParams = useSearchParams();
+    const filter = searchParams.get("filter");
 
     useEffect(() => {
-        const loadBookings = async () => {
+        (async () => {
             try {
                 const res = await fetch("/api/bookings");
                 const data = await res.json();
-                setBookings(data.bookings ?? []);
+                let bookings: Booking[] = data.bookings ?? [];
+
+                const today = new Date().toISOString().split("T")[0];
+
+                if (filter === "today") {
+                    bookings = bookings.filter((b: Booking) => b.date === today);
+                } else if (filter === "past") {
+                    bookings = bookings.filter((b: Booking) => b.date && b.date < today);
+                }
+                else if (filter === "upcoming") {
+                    bookings = bookings.filter((b: Booking) => b.date && b.date > today);
+                }
+
+
+                setBookings(bookings);
             } catch (error) {
                 console.error("Failed to fetch bookings:", error);
             } finally {
                 setLoading(false);
             }
-        };
-        loadBookings();
-    }, []);
+        })();
+    }, [filter]);
+
+
+
 
     const handleDelete = async (id: string) => {
         try {
@@ -184,77 +203,86 @@ export default function DashboardClient() {
     if (loading) return <Skeleton className="h-screen w-full" />;
 
     return (
-        <div className="flex h-screen bg-white dark:bg-black">
-            {sidebarOpen && (
-                <aside className="w-64 flex-shrink-0 overflow-y-auto border-r">
-                    <Sidebar />
-                </aside>
-            )}
+        <div className="flex h-screen overflow-hidden bg-white dark:bg-black">
+            {/* Animated Sidebar */}
+            <aside className={`transition-all duration-300 ${sidebarOpen ? "w-64" : "w-0"} overflow-y-auto border-r`}>
+                {sidebarOpen && <Sidebar />}
+            </aside>
+
             <div className="flex flex-col flex-1 overflow-hidden">
                 <header className="flex h-16 items-center justify-between border-b px-6">
-                    <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">Bookings</h1>
+                    <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200" >{filter === "today"
+                        ? "Today’s Bookings"
+                        : filter === "past"
+                            ? "Past Bookings"
+                            : filter === "upcoming"
+                                ? "Upcoming Bookings"
+                                : "All Bookings"}</h1>
                     <Button variant="outline" size="icon" onClick={toggleSidebar}>
                         {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                     </Button>
                 </header>
-                <main className="flex-1 overflow-auto p-6">
-                    <div className="min-w-full overflow-x-auto">
-                        <div className="min-w-[1600px]">
-                            <Table className="w-full table-auto">
-                                <TableHeader className="sticky top-0 bg-background z-10">
-                                    {table.getHeaderGroups().map((headerGroup) => (
-                                        <TableRow key={headerGroup.id}>
-                                            {headerGroup.headers.map((header) => (
-                                                <TableHead key={header.id}>
-                                                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                                                </TableHead>
-                                            ))}
-                                        </TableRow>
-                                    ))}
-                                </TableHeader>
-                                <TableBody>
-                                    {table.getRowModel().rows.length ? (
-                                        table.getRowModel().rows.map((row) => (
-                                            <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                                                {row.getVisibleCells().map((cell) => (
-                                                    <TableCell key={cell.id}>
-                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                    </TableCell>
+
+                <main className="flex-1 overflow-hidden">
+                    <div className="h-full overflow-auto p-6">
+                        <div className="min-w-full overflow-x-auto">
+                            <div className="min-w-[1600px]">
+                                <Table className="w-full table-auto">
+                                    <TableHeader className="sticky top-0 bg-background z-10">
+                                        {table.getHeaderGroups().map((headerGroup) => (
+                                            <TableRow key={headerGroup.id}>
+                                                {headerGroup.headers.map((header) => (
+                                                    <TableHead key={header.id}>
+                                                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                                    </TableHead>
                                                 ))}
                                             </TableRow>
-                                        ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                No results.
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
+                                        ))}
+                                    </TableHeader>
+                                    <TableBody>
+                                        {table.getRowModel().rows.length ? (
+                                            table.getRowModel().rows.map((row) => (
+                                                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                                                    {row.getVisibleCells().map((cell) => (
+                                                        <TableCell key={cell.id}>
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                                    No results.
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="flex justify-between items-center mt-4 gap-2">
-                        <Button variant="destructive" disabled={!table.getSelectedRowModel().rows.length} onClick={() => setShowBulkDelete(true)}>
-                            🗑 Delete {table.getSelectedRowModel().rows.length} selected
-                        </Button>
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}>
-                                Prev
+                        <div className="flex justify-between items-center mt-4 gap-2">
+                            <Button variant="destructive" disabled={!table.getSelectedRowModel().rows.length} onClick={() => setShowBulkDelete(true)}>
+                                🗑 Delete {table.getSelectedRowModel().rows.length} selected
                             </Button>
-                            <span className="text-sm text-neutral-600 dark:text-neutral-300">
-                Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-              </span>
-                            <Button variant="outline" disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
-                                Next
-                            </Button>
+                            <div className="flex items-center gap-2">
+                                <Button variant="outline" disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}>
+                                    Prev
+                                </Button>
+                                <span className="text-sm text-neutral-600 dark:text-neutral-300">
+                  Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                </span>
+                                <Button variant="outline" disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
+                                    Next
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </main>
             </div>
 
-            {/* Single Delete Confirmation */}
+            {/* Confirmation Dialogs remain unchanged */}
             <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -270,7 +298,6 @@ export default function DashboardClient() {
                 </AlertDialogContent>
             </AlertDialog>
 
-            {/* Bulk Delete Confirmation */}
             <AlertDialog open={showBulkDelete} onOpenChange={setShowBulkDelete}>
                 <AlertDialogContent>
                     <AlertDialogHeader>

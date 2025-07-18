@@ -1,3 +1,4 @@
+// File: lib/auth/checkAdminSession.ts
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { PrismaClient, User } from "@/lib/generated/prisma";
@@ -14,12 +15,13 @@ interface CheckAdminSessionResult {
 export async function checkAdminSession(): Promise<CheckAdminSessionResult> {
     const session = await getServerSession(authOptions);
 
-    // ✅ SAFETY CHECK: make sure session and session.user.email are defined
+    console.log("🧠 SESSION:", session); // Debug log
+
     if (!session?.user?.email) {
         return {
             authorized: false,
             status: 401,
-            message: "Unauthorized - no email in session",
+            message: "Unauthorized: No session email",
             user: null,
         };
     }
@@ -28,11 +30,20 @@ export async function checkAdminSession(): Promise<CheckAdminSessionResult> {
         where: { email: session.user.email },
     });
 
-    if (!user || user.role !== "admin") {
+    if (!user) {
+        return {
+            authorized: false,
+            status: 404,
+            message: "User not found",
+            user: null,
+        };
+    }
+
+    if (user.role !== "ADMIN") {
         return {
             authorized: false,
             status: 403,
-            message: "Forbidden - not an admin",
+            message: "Forbidden: User is not admin",
             user: null,
         };
     }

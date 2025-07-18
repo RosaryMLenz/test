@@ -30,17 +30,19 @@ export default function Sidebar() {
     const router = useRouter();
     const [showConfirm, setShowConfirm] = useState(false);
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        setIsMounted(true);
         const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-        if (savedTheme) {
-            setTheme(savedTheme);
-            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setTheme('dark');
-            document.documentElement.classList.add('dark');
-        }
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const finalTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
+
+        setTheme(finalTheme);
+        document.documentElement.classList.toggle('dark', finalTheme === 'dark');
     }, []);
+
+    if (!isMounted) return null; // 🔥 Prevent hydration mismatch
 
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -67,6 +69,25 @@ export default function Sidebar() {
                         Dashboard
                     </Link>
                 </Button>
+
+                <Button variant="ghost" className="w-full justify-start pl-10" asChild>
+                    <Link href="/admin/dashboard?filter=today">
+                        <span className="text-sm">Today Bookings</span>
+                    </Link>
+                </Button>
+
+                <Button variant="ghost" className="w-full justify-start pl-10" asChild>
+                    <Link href="/admin/dashboard?filter=past">
+                        <span className="text-sm">Past Bookings</span>
+                    </Link>
+                </Button>
+
+                <Button variant="ghost" className="w-full justify-start pl-10" asChild>
+                    <Link href="/admin/dashboard?filter=upcoming">
+                        <span className="text-sm">Upcoming Bookings</span>
+                    </Link>
+                </Button>
+
                 {/* Add more navigation items if needed */}
             </nav>
             <nav className="mt-auto flex flex-col gap-4 px-2 sm:py-5">

@@ -29,25 +29,27 @@ export default function AdminLoginPage() {
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
 
-        const res = await signIn("credentials", {
-            email,
-            password,
-            redirect: false,
-        });
-
         if (!email || !password) {
             setError("Email and password are required.");
             setLoading(false);
             return;
         }
 
+        const res = await signIn("credentials", {
+            email,
+            password,
+            redirect: false,
+        });
+
         if (res?.error) {
             setError("Invalid email or password.");
             toast.error("Invalid email or password. Please try again.");
         } else {
             toast.success("Login successful!");
+            setError(""); // ✅ Clear previous error
             router.push("/admin/dashboard");
         }
+
         setLoading(false);
     };
 
