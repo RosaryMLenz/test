@@ -13,7 +13,7 @@ const slides = [
     "/discount-slides/slide7.jpg",
     "/discount-slides/slide8.jpg",
     "/discount-slides/slide9.jpg",
-    "/discount-slides/slide10.jpg"
+    "/discount-slides/slide10.jpg",
 ];
 
 const INTERVAL_MS = 5000;
@@ -43,21 +43,30 @@ export default function DiscountSection({ onBookClick }: DiscountSectionProps) {
         setCurrent((prev) => (prev + 1) % totalPairs);
     };
 
+    const now = new Date();
+    const month = new Intl.DateTimeFormat(language === "en" ? "en-US" : "es-ES", {
+        month: "long",
+    }).format(now); // e.g., "July" or "julio"
+
     return (
         <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-green-700 dark:text-green-300 mb-4">
-                {language === "en" ? "July Special: 15% Off Oil Changes!" : "¡Especial de Julio: 15% de Descuento en Cambios de Aceite!"}
+                {language === "en"
+                    ? `${month} Special: 15% Off Oil Changes!`
+                    : `¡Especial de ${month.charAt(0).toUpperCase() + month.slice(1)}: 15% de Descuento en Cambios de Aceite!`}
             </h2>
             <p className="text-center text-green-600 dark:text-green-300 mb-8 max-w-xl mx-auto">
                 {language === "en"
-                    ? "Book your oil change before July 31 to save 15% on your next service with Rainforest Automotive."
-                    : "Reserve su cambio de aceite antes del 31 de julio para ahorrar 15% en su próximo servicio con Rainforest Automotive."}
+                    ? `Book your oil change before ${month} 31 to save 15% on your next service with Rainforest Automotive.`
+                    : `Reserve su cambio de aceite antes del 31 de ${month} para ahorrar 15% en su próximo servicio con Rainforest Automotive.`}
             </p>
 
             {/* Slideshow */}
             <div className="relative overflow-hidden rounded-2xl shadow-lg max-w-6xl mx-auto w-full">
-                <div className="flex transition-transform duration-700 ease-in-out w-full"
-                     style={{ transform: `translateX(-${current * 100}%)` }}>
+                <div
+                    className="flex transition-transform duration-700 ease-in-out w-full"
+                    style={{ transform: `translateX(-${current * 100}%)` }}
+                >
                     {Array.from({ length: totalPairs }).map((_, idx) => {
                         const [first, second] = [slides[idx * 2], slides[idx * 2 + 1]];
                         return (
