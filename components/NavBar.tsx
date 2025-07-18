@@ -12,7 +12,6 @@ const links = [
     { href: "/", labelEn: "Home", labelEs: "Inicio" },
     { href: "/services", labelEn: "Services", labelEs: "Servicios" },
     { href: "/contact", labelEn: "Contact", labelEs: "Contacto" },
-    { href: "/warranty", labelEn: "Warranty", labelEs: "Garantia" },
 ];
 
 export default function NavBar() {

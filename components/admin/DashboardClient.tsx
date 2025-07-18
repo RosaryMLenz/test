@@ -203,7 +203,7 @@ export default function DashboardClient() {
     if (loading) return <Skeleton className="h-screen w-full" />;
 
     return (
-        <div className="flex h-screen overflow-hidden bg-white dark:bg-black">
+        <div className="flex h-screen w-screen overflow-hidden bg-white dark:bg-black">
             {/* Animated Sidebar */}
             <aside className={`transition-all duration-300 ${sidebarOpen ? "w-64" : "w-0"} overflow-y-auto border-r`}>
                 {sidebarOpen && <Sidebar />}
@@ -225,7 +225,7 @@ export default function DashboardClient() {
 
                 <main className="flex-1 overflow-hidden">
                     <div className="h-full overflow-auto p-6">
-                        <div className="min-w-full overflow-x-auto">
+                        <div className="w-full overflow-x-auto">
                             <div className="min-w-[1600px]">
                                 <Table className="w-full table-auto">
                                     <TableHeader className="sticky top-0 bg-background z-10">

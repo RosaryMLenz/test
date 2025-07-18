@@ -39,11 +39,6 @@ const Footer = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="/discounts" className="hover:text-green-500 dark:hover:text-green-400 transition-colors">
-                                {language === "en" ? "Discounts" : "Descuentos"}
-                            </Link>
-                        </li>
-                        <li>
                             <Link href="/contact" className="hover:text-green-500 dark:hover:text-green-400 transition-colors">
                                 {language === "en" ? "Contact" : "Contacto"}
                             </Link>

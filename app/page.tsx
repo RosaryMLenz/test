@@ -5,6 +5,7 @@ import Hero from '@/components/Hero';
 import BookingModal from '@/components/BookingModal/BookingModal';
 import DiscountSection from "@/components/DiscountSection";
 import AutoRepairServicesSection from "@/components/AutoRepairServicesSection";
+import WarrantySection from "@/components/WarrantySection";
 
 export default function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,6 +23,7 @@ export default function Home() {
             <Hero onBookClick={handleOpenBookingModal} />
             <DiscountSection onBookClick={handleOpenBookingModal} />
             <AutoRepairServicesSection />
+            <WarrantySection />
             {/* other sections */}
 
             <BookingModal

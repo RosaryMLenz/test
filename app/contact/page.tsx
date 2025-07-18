@@ -33,11 +33,11 @@ export default function ContactPage() {
                 </p>
 
                 <div className="flex flex-col items-center space-y-2">
-                    <a href="tel:+17028349385" className="text-green-600 dark:text-green-400 hover:underline text-lg font-medium">
-                        +1 (702) 834-9385
+                    <a href="tel:+1-702-762-7573" className="text-green-600 dark:text-green-400 hover:underline text-lg font-medium">
+                        +1-702-762-7573
                     </a>
-                    <a href="mailto:info@rainforestautomotive.work" className="text-green-600 dark:text-green-400 hover:underline text-lg font-medium">
-                        info@rainforestautomotive.work
+                    <a href="mailto:info@rainforest21automotive.com" className="text-green-600 dark:text-green-400 hover:underline text-lg font-medium">
+                        info@rainforest21automotive.com
                     </a>
                     <p className="text-gray-700 dark:text-gray-300 text-lg font-medium text-center">
                         3280 Wynn Rd, Unit 4<br />
@@ -58,7 +58,8 @@ export default function ContactPage() {
 
             {/* Additional details beneficial for a mechanic shop */}
             <div className="max-w-xl mx-auto text-center space-y-3 text-gray-700 dark:text-gray-300">
-                <p>{language === "en" ? "Open Monday - Saturday from 8:00 AM to 6:00 PM." : "Abierto de lunes a sábado de 8:00 AM a 6:00 PM."}</p>
+                <p>{language === "en" ? "Open Monday - Friday from 9:00 AM to 6:00 PM." : "Abierto de lunes a viernes de 9:00 AM a 6:00 PM."}</p>
+                <p>{language === "en" ? "Open Saturday from 9:00 AM to 12:00 PM." : "Sábado de 9:00 AM a 12:00 PM."}</p>
                 <p>{language === "en" ? "Walk-ins welcome, or book your appointment online." : "Se aceptan visitas sin cita, o reserve su cita en línea."}</p>
                 <p>{language === "en" ? "We offer free diagnostics with any repair service." : "Ofrecemos diagnóstico gratuito con cualquier servicio de reparación."}</p>
             </div>
