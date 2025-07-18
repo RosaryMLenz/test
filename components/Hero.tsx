@@ -44,7 +44,7 @@ const Hero = ({ onBookClick }: HeroProps) => {
                         {language === "en" ? "Book Appointment" : "Reservar Cita"}
                     </button>
                     <a
-                        href="tel:+17028349385"
+                        href="tel:+1-702-762-7573"
                         className="border border-green-500 text-green-500 hover:bg-green-500 hover:text-black font-semibold px-6 py-3 rounded transition-colors duration-300"
                     >
                         {language === "en" ? "Call Now" : "Llamar Ahora"}
