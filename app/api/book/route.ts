@@ -96,7 +96,7 @@ export async function POST(req: Request): Promise<NextResponse> {
                 to: process.env.ADMIN_NOTIFICATION_EMAIL,
                 subject: 'New Booking Notification - Rainforest Automotive',
                 html: `
-                    <h2>New Booking Received</h2>
+                    <h2>New Booking Received.</h2>
                     <p>A new booking has been made. Here are the details:</p>
                     <ul>
                         <li><strong>Name:</strong> ${bookingData.name}</li>
