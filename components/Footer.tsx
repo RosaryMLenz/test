@@ -73,19 +73,35 @@ const Footer = () => {
 
                     {/* Socials */}
                     <div className="flex space-x-4 mt-4">
-                        <a href="#" aria-label="Facebook" className="hover:text-green-500 dark:hover:text-green-400 transition-colors">
+                        <a
+                            href="https://www.facebook.com/yourhandle"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook"
+                            className="hover:text-green-500 dark:hover:text-green-400 transition-colors"
+                        >
                             FB
                         </a>
-                        <a href="#" aria-label="Instagram" className="hover:text-green-500 dark:hover:text-green-400 transition-colors">
+                        <a
+                            href="https://www.instagram.com/rainforest21automotive"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram"
+                            className="hover:text-green-500 dark:hover:text-green-400 transition-colors"
+                        >
                             IG
                         </a>
-                        <a href="#" aria-label="WhatsApp" className="hover:text-green-500 dark:hover:text-green-400 transition-colors">
-                            WA
-                        </a>
-                        <a href="#" aria-label="TikTok" className="hover:text-green-500 dark:hover:text-green-400 transition-colors">
+                        <a
+                            href="https://www.tiktok.com/@rainforest21.auto"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="TikTok"
+                            className="hover:text-green-500 dark:hover:text-green-400 transition-colors"
+                        >
                             TK
                         </a>
                     </div>
+
                 </div>
             </div>
 
