@@ -46,18 +46,33 @@ export default function Step4({ formData, setFormData }: StepProps) {
     const generateTimeSlots = (date: string | null) => {
         if (!date) return [];
         const d = dayjs(date);
+        const now = dayjs();
         const slots: string[] = [];
+
+        const isToday = d.isSame(now, "day");
+
+        const addSlot = (hour: number, minute: number) => {
+            const slotTime = d.hour(hour).minute(minute).second(0).millisecond(0);
+            const formatted = slotTime.format("h:mm A");
+            if (!isToday || slotTime.isAfter(now)) {
+                slots.push(formatted);
+            } else {
+                slots.push(`__DISABLED__${formatted}`);
+            }
+        };
+
         if (d.day() >= 1 && d.day() <= 5) {
             for (let hour = 9; hour < 18; hour++) {
-                slots.push(dayjs().hour(hour).minute(0).format("h:mm A"));
-                slots.push(dayjs().hour(hour).minute(30).format("h:mm A"));
+                addSlot(hour, 0);
+                addSlot(hour, 30);
             }
         } else if (d.day() === 6) {
             for (let hour = 9; hour < 12; hour++) {
-                slots.push(dayjs().hour(hour).minute(0).format("h:mm A"));
-                slots.push(dayjs().hour(hour).minute(30).format("h:mm A"));
+                addSlot(hour, 0);
+                addSlot(hour, 30);
             }
         }
+
         return slots;
     };
 
@@ -80,7 +95,9 @@ export default function Step4({ formData, setFormData }: StepProps) {
             .catch((error) => {
                 console.error(error);
                 setBookedTimes([]);
-                toast.error(language === "en" ? "Failed to load available times. All slots shown as available." : "Error al cargar horarios disponibles. Todos los slots se muestran como disponibles.");
+                toast.error(language === "en"
+                    ? "Failed to load available times. All slots shown as available."
+                    : "Error al cargar horarios disponibles. Todos los slots se muestran como disponibles.");
             })
             .finally(() => {
                 setLoading(false);
@@ -98,8 +115,6 @@ export default function Step4({ formData, setFormData }: StepProps) {
             );
         }
     }, [bookedTimes, selectedTime, language, setFormData]);
-
-    // Removed the premature toast useEffect to avoid glitch
 
     return (
         <div className="flex flex-col gap-2">
@@ -191,22 +206,27 @@ export default function Step4({ formData, setFormData }: StepProps) {
                     ) : (
                         <div className="grid grid-cols-2 gap-2 max-h-[200px] overflow-y-auto">
                             {generateTimeSlots(selectedDate).map((time) => {
-                                const isBooked = bookedTimes.includes(time);
-                                const isSelected = selectedTime === time;
+                                const isDisabledByTime = time.startsWith("__DISABLED__");
+                                const realTime = isDisabledByTime ? time.replace("__DISABLED__", "") : time;
+                                const isBooked = bookedTimes.includes(realTime);
+                                const isSelected = selectedTime === realTime;
+
                                 return (
                                     <div
-                                        key={time}
-                                        onClick={() => !isBooked && handleTimeSelect(time)}
+                                        key={realTime}
+                                        onClick={() => {
+                                            if (!isBooked && !isDisabledByTime) handleTimeSelect(realTime);
+                                        }}
                                         className={cn(
                                             "p-2 text-center rounded cursor-pointer text-sm transition-all select-none",
-                                            isBooked
+                                            isBooked || isDisabledByTime
                                                 ? "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-400"
                                                 : isSelected
                                                     ? "bg-blue-500 text-white hover:bg-blue-600"
                                                     : "bg-gray-100 dark:bg-neutral-800 hover:bg-gray-200 dark:hover:bg-neutral-700"
                                         )}
                                     >
-                                        {time}
+                                        {realTime}
                                     </div>
                                 );
                             })}
