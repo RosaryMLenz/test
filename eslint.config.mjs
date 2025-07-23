@@ -13,10 +13,18 @@ const eslintConfig = [
   {
     ignores: [
       "**/lib/generated/prisma/**", // ✅ ignore Prisma generated files
+      "dist/**",                    // ✅ ignore compiled output
     ],
   },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // ✅ Override rules in scripts/
+  {
+    files: ["scripts/**/*.ts"],
+    rules: {
+      "@next/next/no-html-link-for-pages": "off",
+    },
+  },
 ];
 
-// ✅ Fix import/no-anonymous-default-export by exporting a named variable
 export default eslintConfig;

@@ -274,7 +274,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
                 )}
 
                 <div className={cn("mt-2 text-center text-sm uppercase font-bold pt-7", orbitron.className)}>
-                    <a href="https://vercel.com/benfrank7777s-projects/portafolio/EasU9vZYizNgTQPcdpJxSCGSQELV" className="text-neutral-700 dark:text-neutral-200">
+                    <a href="https://portafolio-beige-ten.vercel.app" className="text-neutral-700 dark:text-neutral-200">
                         powered by Frank
                     </a>
                 </div>
