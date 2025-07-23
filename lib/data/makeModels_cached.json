@@ -301,7 +301,13 @@
     "Swinford Mfg",
     "Transit",
     "Transit Connect",
-    "Travel Park"
+    "Travel Park",
+    "Fusion",
+    "Taurus",
+    "Crown Victoria",
+    "Five Hundred",
+    "Tempo",
+    "Contour"
   ],
   "LOTUS": [
     "ELETRE",
@@ -1284,7 +1290,13 @@
   "SATURN": [
     "SATURN2016",
     "SATURN2019",
-    "Saturn Industries"
+    "Saturn Industries",
+    "Ion",
+    "Aura",
+    "Vue",
+    "Outlook",
+    "Sky",
+    "Relay"
   ],
   "AMERICAN MOTORS": [
     "Delaware American Motors LLC"
@@ -1535,7 +1547,10 @@
     "Grand Voyager",
     "Neon",
     "Prowler",
-    "Voyager"
+    "Voyager",
+    "Breeze",
+    "Sundance",
+    "Laser"
   ],
   "PHOENIX MOTORCARS": [
     "Phoenix Motorcars"
@@ -2160,5 +2175,40 @@
     "Rogue",
     "Stallion",
     "Wraith"
+  ],
+  "SCION": [
+    "iA",
+    "tC",
+    "xB",
+    "xD",
+    "FR-S",
+    "iQ",
+    "xA"
+  ],
+  "PONTIAC": [
+    "G6",
+    "G5",
+    "G8",
+    "Vibe",
+    "Grand Am",
+    "Grand Prix",
+    "Solstice"
+  ],
+  "HUMMER": [
+    "H1",
+    "H2",
+    "H3"
+  ],
+  "MERCURY": [
+    "Milan",
+    "Grand Marquis",
+    "Mountaineer",
+    "Sable"
+  ],
+  "OLDSMOBILE": [
+    "Alero",
+    "Intrigue",
+    "Bravada",
+    "Aurora"
   ]
 }
