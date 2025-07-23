@@ -37,7 +37,7 @@ export default function ContactPage() {
                         +1-702-762-7573
                     </a>
                     <a href="mailto:office@rainforest21automotive.com" className="text-green-600 dark:text-green-400 hover:underline text-lg font-medium">
-                        info@rainforest21automotive.com
+                        office@rainforest21automotive.com
                     </a>
                     <p className="text-gray-700 dark:text-gray-300 text-lg font-medium text-center">
                         3280 Wynn Rd, Unit 4<br />
