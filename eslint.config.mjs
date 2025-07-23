@@ -14,6 +14,12 @@ const eslintConfig = [
     ignores: [
       "**/lib/generated/prisma/**", // ✅ ignore Prisma generated files
       "dist/**",                    // ✅ ignore compiled output
+      '**/node_modules/**',
+      '**/.next/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/public/**',
+      '**/scripts/makeModels_cached.json', // if you want to ignore generated file
     ],
   },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
