@@ -66,7 +66,7 @@ const Footer = () => {
                                 href="mailto:office@rainforest21automotive.com"
                                 className="hover:text-green-500 dark:hover:text-green-400 transition-colors"
                             >
-                                info@rainforest21automotive.com
+                                office@rainforest21automotive.com
                             </a>
                         </li>
                     </ul>
