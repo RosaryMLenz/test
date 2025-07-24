@@ -66,14 +66,16 @@ export default function RootLayout({
         </head>
 
         <body className={inter.className}>
-        <Providers>
-            <LanguageProvider>
-                <ClientWrapper>
-                    <Toaster position="top-center" />
-                    {children}
-                </ClientWrapper>
-            </LanguageProvider>
-        </Providers>
+        <div id="scroll-container" className="overflow-auto h-screen">
+            <Providers>
+                <LanguageProvider>
+                    <ClientWrapper>
+                        <Toaster position="top-center" />
+                        {children}
+                    </ClientWrapper>
+                </LanguageProvider>
+            </Providers>
+        </div>
         </body>
 
         </html>

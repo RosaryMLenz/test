@@ -1,27 +1,32 @@
-// app/components/StickyNavWrapper.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import NavBar from "@/components/NavBar";
 
 export default function StickyNavWrapper() {
     const [show, setShow] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
+    const lastScrollY = useRef(0);
 
     useEffect(() => {
+        console.log("Navbar mounted");
+
+        const scrollContainer = document.getElementById("scroll-container");
+
         const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            if (currentScrollY > lastScrollY && currentScrollY > 80) {
-                setShow(false); // scroll down, hide
+            const currentScrollY = scrollContainer?.scrollTop ?? 0;
+
+            if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+                setShow(false);
             } else {
-                setShow(true); // scroll up, show
+                setShow(true);
             }
-            setLastScrollY(currentScrollY);
+
+            lastScrollY.current = currentScrollY;
         };
 
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [lastScrollY]);
+        scrollContainer?.addEventListener("scroll", handleScroll);
+        return () => scrollContainer?.removeEventListener("scroll", handleScroll);
+    }, []);
 
     return (
         <div
