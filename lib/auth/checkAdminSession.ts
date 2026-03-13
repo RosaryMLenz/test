@@ -39,7 +39,7 @@ export async function checkAdminSession(): Promise<CheckAdminSessionResult> {
         };
     }
 
-    if (user.role !== "ADMIN") {
+    if (user.role?.toLowerCase() !== "admin") {
         return {
             authorized: false,
             status: 403,
