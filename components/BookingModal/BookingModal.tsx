@@ -13,8 +13,6 @@ import Done from './Done';
 import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { BookingFormData } from "@/types/BookingFormData";
-import { Orbitron } from 'next/font/google';
-import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 
@@ -23,22 +21,16 @@ interface BookingModalProps {
     onCloseAction: () => void;
 }
 
-const orbitron = Orbitron({
-    subsets: ['latin'],
-    display: 'swap',
-});
-
-export default function BookingModal({ isOpen, onCloseAction }: BookingModalProps) {
-    const [currentStep, setCurrentStep] = useState<number>(0);
-    const [formData, setFormData] = useState<BookingFormData>({
+function createInitialFormData(): BookingFormData {
+    return {
         name: "",
         email: "",
         phone: "",
         reason: "",
-        make: "", // New
+        make: "",
         year: "",
-        model: "", // New
-        trim: "", // New
+        model: "",
+        trim: "",
         problemDescription: "",
         date: "",
         time: "",
@@ -46,7 +38,14 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
         acceptTerms: false,
         enableNotifications: false,
         dropOffOrWait: "",
-    });
+        website: "",
+        formStartedAt: Date.now().toString(),
+    };
+}
+
+export default function BookingModal({ isOpen, onCloseAction }: BookingModalProps) {
+    const [currentStep, setCurrentStep] = useState<number>(0);
+    const [formData, setFormData] = useState<BookingFormData>(createInitialFormData);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { language, toggleLanguage } = useLanguage();
@@ -146,23 +145,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
 
     const resetForm = () => {
         setCurrentStep(0);
-        setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            reason: "",
-            make: "",
-            year: "",
-            model: "",
-            trim: "",
-            problemDescription: "",
-            date: "",
-            time: "",
-            additionalDetails: "",
-            acceptTerms: false,
-            enableNotifications: false,
-            dropOffOrWait: "",
-        });
+        setFormData(createInitialFormData());
     };
 
     const handleSubmit = async () => {
@@ -190,7 +173,16 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
     };
 
     useEffect(() => {
-        if (!isOpen) resetForm();
+        if (!isOpen) {
+            resetForm();
+            return;
+        }
+
+        setFormData((prev) => ({
+            ...prev,
+            website: "",
+            formStartedAt: Date.now().toString(),
+        }));
     }, [isOpen]);
 
     // Adjust currentStep if hasCarProblems changes after Step 1
@@ -252,6 +244,21 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
 
                 {renderStep()}
 
+                <div className="sr-only" aria-hidden="true">
+                    <label htmlFor="booking-website">Website</label>
+                    <input
+                        id="booking-website"
+                        name="website"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={formData.website}
+                        onChange={(event) =>
+                            setFormData((prev) => ({ ...prev, website: event.target.value }))
+                        }
+                    />
+                </div>
+
                 {currentStep < totalSteps - 1 && (
                     <div className="flex justify-between items-center mt-6">
                         <button onClick={handleBack} disabled={currentStep === 0} className={`px-4 py-2 rounded transition ${currentStep === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-500' : 'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200'}`}>
@@ -273,7 +280,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
                     </div>
                 )}
 
-                <div className={cn("mt-2 text-center text-sm uppercase font-bold pt-7", orbitron.className)}>
+                <div className="mt-2 pt-7 text-center text-sm font-bold uppercase tracking-[0.2em] font-mono">
                     <a href="https://portafolio-beige-ten.vercel.app" className="text-neutral-700 dark:text-neutral-200" target="_blank"
                        rel="noopener noreferrer">
                         powered by Frank

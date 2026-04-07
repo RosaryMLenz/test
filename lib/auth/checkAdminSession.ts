@@ -1,9 +1,7 @@
-// File: lib/auth/checkAdminSession.ts
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
-import { PrismaClient, User } from "@/lib/generated/prisma";
-
-const prisma = new PrismaClient();
+import type { User } from "@/lib/generated/prisma";
+import { prisma } from "@/lib/prisma";
 
 interface CheckAdminSessionResult {
     authorized: boolean;
@@ -14,8 +12,6 @@ interface CheckAdminSessionResult {
 
 export async function checkAdminSession(): Promise<CheckAdminSessionResult> {
     const session = await getServerSession(authOptions);
-
-    console.log("🧠 SESSION:", session); // Debug log
 
     if (!session?.user?.email) {
         return {

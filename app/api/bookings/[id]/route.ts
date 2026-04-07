@@ -1,9 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { checkAdminSession } from "@/lib/auth/checkAdminSession";
+import { z } from "zod";
+import { adminBookingUpdateSchema, isBookingSlotConflictError } from "@/lib/bookingValidation";
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+async function requireAdmin() {
+    const session = await checkAdminSession();
+
+    if (!session.authorized) {
+        return NextResponse.json(
+            { error: session.message },
+            { status: session.status }
+        );
+    }
+
+    return null;
+}
+
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = await params;  // Await the params Promise to get the actual values
+        const unauthorized = await requireAdmin();
+        if (unauthorized) {
+            return unauthorized;
+        }
+
+        const { id } = await params;
 
         const booking = await prisma.booking.findUnique({
             where: { id },
@@ -22,9 +43,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = await params;  // Await the params Promise to get the actual values
+        const unauthorized = await requireAdmin();
+        if (unauthorized) {
+            return unauthorized;
+        }
 
-        const data = await req.json();
+        const { id } = await params;
+
+        const body = await req.json();
+        const data = adminBookingUpdateSchema.parse(body);
         const updated = await prisma.booking.update({
             where: { id },
             data,
@@ -33,13 +60,41 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         return NextResponse.json({ booking: updated });
     } catch (error) {
         console.error("PUT /api/bookings/[id] failed:", error);
+
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { error: "Validation failed", details: error.errors },
+                { status: 400 },
+            );
+        }
+
+        if (isBookingSlotConflictError(error)) {
+            return NextResponse.json(
+                { error: "Selected date and time are already booked." },
+                { status: 409 },
+            );
+        }
+
+        if (
+            error instanceof Error &&
+            "code" in error &&
+            (error as Error & { code?: string }).code === "P2025"
+        ) {
+            return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+        }
+
         return NextResponse.json({ error: "Failed to update booking" }, { status: 500 });
     }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = await params;  // Await the params Promise to get the actual values
+        const unauthorized = await requireAdmin();
+        if (unauthorized) {
+            return unauthorized;
+        }
+
+        const { id } = await params;
 
         await prisma.booking.delete({
             where: { id },

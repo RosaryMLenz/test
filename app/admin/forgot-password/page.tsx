@@ -6,6 +6,8 @@ import { toast } from "sonner";
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("");
+    const [website, setWebsite] = useState("");
+    const [formStartedAt, setFormStartedAt] = useState(() => Date.now().toString());
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -23,12 +25,14 @@ export default function ForgotPasswordPage() {
             const res = await fetch("/api/auth/forgot-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email, website, formStartedAt }),
             });
 
             if (res.ok) {
                 toast.success("If your email exists, a reset link has been sent.");
-                setEmail(""); // Clear form on success
+                setEmail("");
+                setWebsite("");
+                setFormStartedAt(Date.now().toString());
             } else {
                 const data = await res.json();
                 toast.error(data.error || "Something went wrong. Try again.");
@@ -45,6 +49,17 @@ export default function ForgotPasswordPage() {
         <div className="flex items-center justify-center min-h-screen px-4">
             <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
                 <h1 className="text-2xl font-bold text-center">Forgot Password</h1>
+                <div className="sr-only" aria-hidden="true">
+                    <label htmlFor="forgot-password-website">Website</label>
+                    <Input
+                        id="forgot-password-website"
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={website}
+                        onChange={(e) => setWebsite(e.target.value)}
+                    />
+                </div>
                 <Input
                     type="email"
                     placeholder="Enter your email"

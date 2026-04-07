@@ -10,6 +10,11 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
+    "prisma:local": "if [ -f .env.local ]; then set -a; . ./.env.local; set +a; fi; if [ -n \"$DATABASE_URL_UNPOOLED\" ]; then export DATABASE_URL=\"$DATABASE_URL_UNPOOLED\"; fi; prisma",
+    "db:generate": "npm run prisma:local -- generate",
+    "db:migrate:status": "npm run prisma:local -- migrate status",
+    "db:migrate:deploy": "npm run prisma:local -- migrate deploy",
+    "db:studio": "npm run prisma:local -- studio",
     "update:makes": "NODE_OPTIONS='--loader ts-node/esm' node scripts/fetchCarMakes.ts"
   },
   "dependencies": {

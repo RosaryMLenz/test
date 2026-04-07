@@ -16,6 +16,8 @@ export interface BookingFormData {
     acceptTerms: boolean;
     enableNotifications: boolean;
     dropOffOrWait: string;
+    website: string;
+    formStartedAt: string;
 }
 
 export interface Booking {

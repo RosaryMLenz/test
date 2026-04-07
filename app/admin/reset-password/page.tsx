@@ -18,7 +18,7 @@ function ResetPasswordForm() {
     useEffect(() => {
         if (!token) {
             toast.error("Invalid or missing token.");
-            router.push("/forgot-password");
+            router.push("/admin/forgot-password");
         }
     }, [token, router]);
 

@@ -46,7 +46,8 @@ export default function EditBookingPage() {
         });
 
         if (!res.ok) {
-            toast.error("Failed to update booking");
+            const data = await res.json().catch(() => null);
+            toast.error(data?.error || "Failed to update booking");
             return;
         }
 

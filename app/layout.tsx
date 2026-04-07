@@ -1,14 +1,11 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import React from 'react';
 import { Toaster } from 'sonner';
 import {Providers} from "@/app/providers";
 import { LanguageProvider } from "@/context/LanguageContext";
 import ClientWrapper from '@/app/ClientWrapper'; // Import the new client component
-
-const inter = Inter({ subsets: ['latin'] });
 
 // 🚀 SEO metadata
 export const metadata: Metadata = {
@@ -40,9 +37,6 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning={true}>
         <head>
-            {/* Explicit <title> tag for IDE clarity */}
-            <title>Rainforest Automotive</title>
-
             {/* Structured data for LocalBusiness -> AutoRepair */}
             <script
                 type="application/ld+json"
@@ -65,7 +59,7 @@ export default function RootLayout({
             />
         </head>
 
-        <body className={inter.className}>
+        <body className="antialiased">
         <div id="scroll-container" className="overflow-auto h-screen">
             <Providers>
                 <LanguageProvider>
