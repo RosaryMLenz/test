@@ -33,13 +33,17 @@ export default function Sidebar() {
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
-        setIsMounted(true);
-        const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const finalTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
+        const timeout = window.setTimeout(() => {
+            setIsMounted(true);
+            const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+            const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            const finalTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
 
-        setTheme(finalTheme);
-        document.documentElement.classList.toggle('dark', finalTheme === 'dark');
+            setTheme(finalTheme);
+            document.documentElement.classList.toggle('dark', finalTheme === 'dark');
+        }, 0);
+
+        return () => window.clearTimeout(timeout);
     }, []);
 
     if (!isMounted) return null; // 🔥 Prevent hydration mismatch

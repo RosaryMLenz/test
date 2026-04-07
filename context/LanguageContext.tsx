@@ -18,10 +18,14 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     const [language, setLanguage] = useState<Language>("en");
 
     useEffect(() => {
-        const stored = localStorage.getItem("language") as Language;
-        if (stored === "en" || stored === "es") {
-            setLanguage(stored);
-        }
+        const timeout = window.setTimeout(() => {
+            const stored = localStorage.getItem("language") as Language;
+            if (stored === "en" || stored === "es") {
+                setLanguage(stored);
+            }
+        }, 0);
+
+        return () => window.clearTimeout(timeout);
     }, []);
 
     const toggleLanguage = () => {

@@ -1,6 +1,6 @@
 import crypto from "crypto";
-import { Prisma } from "@/lib/generated/prisma";
-import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/lib/generated/prisma/client";
+import { getPrisma } from "@/lib/prisma";
 
 const CLIENT_IP_HEADERS = [
     "cf-connecting-ip",
@@ -162,6 +162,7 @@ async function consumeRateLimit(rule: RateLimitRule): Promise<RateLimitResult> {
     const now = new Date();
     const blockMs = rule.blockMs ?? rule.windowMs;
     const key = buildThrottleKey(rule.scope, rule.bucket, rule.identifier);
+    const prisma = getPrisma();
 
     return runSerializable(() =>
         prisma.$transaction(

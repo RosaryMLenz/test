@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { checkAdminSession } from "@/lib/auth/checkAdminSession";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 
@@ -14,6 +14,7 @@ export async function GET() {
         );
     }
 
+    const prisma = getPrisma();
     const user = await prisma.user.findUnique({
         where: { email: session.user.email },
         select: { email: true },
@@ -49,6 +50,7 @@ export async function PUT(req: NextRequest) {
         }
 
 
+        const prisma = getPrisma();
         await prisma.user.update({
             where: { email: session.user.email },
             data: updateData,

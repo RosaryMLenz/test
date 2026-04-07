@@ -70,8 +70,6 @@ export default function Step3({ formData, setFormData }: StepProps) {
 
     // Fetch makes on mount
     useEffect(() => {
-        setLoadingMakes(true);
-        setErrorMakes(null);
         fetch('/api/vehicles?type=makes')
             .then(res => {
                 if (!res.ok) {
