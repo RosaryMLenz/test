@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { BookingFormData } from "@/types/BookingFormData";
 import { useLanguage } from "@/context/LanguageContext";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface StepProps {
     formData: BookingFormData;
+    setFormData: Dispatch<SetStateAction<BookingFormData>>;
 }
 
-export default function Step5({ formData }: StepProps) {
+export default function Step5({ formData, setFormData }: StepProps) {
     const { language } = useLanguage();
 
     return (
@@ -33,6 +35,39 @@ export default function Step5({ formData }: StepProps) {
                 {formData.additionalDetails && (
                     <p><strong>{language === "en" ? "Additional Details:" : "Detalles Adicionales:"}</strong> {formData.additionalDetails}</p>
                 )}
+            </div>
+
+            <div className="mt-6 rounded border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950">
+                <div className="flex items-start gap-3">
+                    <Checkbox
+                        id="acceptTerms"
+                        checked={formData.acceptTerms}
+                        onCheckedChange={(checked) =>
+                            setFormData((prev) => ({
+                                ...prev,
+                                acceptTerms: checked === true,
+                            }))
+                        }
+                        aria-describedby="acceptTermsDescription"
+                        className="mt-1"
+                    />
+                    <label
+                        htmlFor="acceptTerms"
+                        className="text-sm font-medium leading-relaxed text-neutral-800 dark:text-neutral-200"
+                    >
+                        {language === "en"
+                            ? "I agree to the terms of service."
+                            : "Acepto los términos de servicio."}
+                    </label>
+                </div>
+                <p
+                    id="acceptTermsDescription"
+                    className="mt-2 pl-7 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400"
+                >
+                    {language === "en"
+                        ? "Please review your booking details before submitting."
+                        : "Por favor revisa los detalles de tu cita antes de enviarla."}
+                </p>
             </div>
         </div>
     );
