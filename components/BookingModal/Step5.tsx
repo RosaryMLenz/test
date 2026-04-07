@@ -37,8 +37,16 @@ export default function Step5({ formData, setFormData }: StepProps) {
                 )}
             </div>
 
-            <div className="mt-6 rounded border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-950">
-                <div className="flex items-start gap-3">
+            <div className="mt-6 rounded border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/30">
+                <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
+                    {language === "en" ? "Terms and Conditions" : "Términos y Condiciones"}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+                    {language === "en"
+                        ? "Please confirm that your booking details are accurate and that you understand appointment availability may change until we confirm your request."
+                        : "Confirma que los detalles de tu cita son correctos y que entiendes que la disponibilidad puede cambiar hasta que confirmemos tu solicitud."}
+                </p>
+                <div className="mt-4 flex items-start gap-3">
                     <Checkbox
                         id="acceptTerms"
                         checked={formData.acceptTerms}
@@ -49,7 +57,7 @@ export default function Step5({ formData, setFormData }: StepProps) {
                             }))
                         }
                         aria-describedby="acceptTermsDescription"
-                        className="mt-1"
+                        className="mt-1.5"
                     />
                     <label
                         htmlFor="acceptTerms"
