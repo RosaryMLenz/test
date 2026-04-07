@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { BookingFormData } from "@/types/BookingFormData";
 import { useLanguage } from "@/context/LanguageContext";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface StepProps {
     formData: BookingFormData;
+    setFormData: Dispatch<SetStateAction<BookingFormData>>;
 }
 
-export default function Step5({ formData }: StepProps) {
+export default function Step5({ formData, setFormData }: StepProps) {
     const { language } = useLanguage();
 
     return (
@@ -33,6 +35,47 @@ export default function Step5({ formData }: StepProps) {
                 {formData.additionalDetails && (
                     <p><strong>{language === "en" ? "Additional Details:" : "Detalles Adicionales:"}</strong> {formData.additionalDetails}</p>
                 )}
+            </div>
+
+            <div className="mt-6 rounded border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/30">
+                <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
+                    {language === "en" ? "Terms and Conditions" : "Términos y Condiciones"}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+                    {language === "en"
+                        ? "Please confirm that your booking details are accurate and that you understand appointment availability may change until we confirm your request."
+                        : "Confirma que los detalles de tu cita son correctos y que entiendes que la disponibilidad puede cambiar hasta que confirmemos tu solicitud."}
+                </p>
+                <div className="mt-4 flex items-start gap-3">
+                    <Checkbox
+                        id="acceptTerms"
+                        checked={formData.acceptTerms}
+                        onCheckedChange={(checked) =>
+                            setFormData((prev) => ({
+                                ...prev,
+                                acceptTerms: checked === true,
+                            }))
+                        }
+                        aria-describedby="acceptTermsDescription"
+                        className="mt-1.5"
+                    />
+                    <label
+                        htmlFor="acceptTerms"
+                        className="text-sm font-medium leading-relaxed text-neutral-800 dark:text-neutral-200"
+                    >
+                        {language === "en"
+                            ? "I agree to the terms of service."
+                            : "Acepto los términos de servicio."}
+                    </label>
+                </div>
+                <p
+                    id="acceptTermsDescription"
+                    className="mt-2 pl-7 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400"
+                >
+                    {language === "en"
+                        ? "Please review your booking details before submitting."
+                        : "Por favor revisa los detalles de tu cita antes de enviarla."}
+                </p>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { Resend } from "resend";
 import crypto from "crypto";
 import { NextResponse } from "next/server";
@@ -77,6 +77,7 @@ export async function POST(req: Request) {
             );
         }
 
+        const prisma = getPrisma();
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
             return NextResponse.json({

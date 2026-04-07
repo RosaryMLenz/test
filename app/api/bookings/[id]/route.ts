@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { checkAdminSession } from "@/lib/auth/checkAdminSession";
 import { z } from "zod";
 import { adminBookingUpdateSchema, isBookingSlotConflictError } from "@/lib/bookingValidation";
@@ -26,6 +26,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
         const { id } = await params;
 
+        const prisma = getPrisma();
         const booking = await prisma.booking.findUnique({
             where: { id },
         });
@@ -52,6 +53,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
         const body = await req.json();
         const data = adminBookingUpdateSchema.parse(body);
+        const prisma = getPrisma();
         const updated = await prisma.booking.update({
             where: { id },
             data,
@@ -63,7 +65,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
         if (error instanceof z.ZodError) {
             return NextResponse.json(
-                { error: "Validation failed", details: error.errors },
+                { error: "Validation failed", details: error.issues },
                 { status: 400 },
             );
         }
@@ -96,6 +98,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
 
         const { id } = await params;
 
+        const prisma = getPrisma();
         await prisma.booking.delete({
             where: { id },
         });

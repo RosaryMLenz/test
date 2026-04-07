@@ -149,6 +149,11 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
     };
 
     const handleSubmit = async () => {
+        if (!formData.acceptTerms) {
+            toast.error(language === "en" ? "Please accept the terms of service before submitting." : "Por favor acepta los términos de servicio antes de enviar.");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             const response = await fetch('/api/book', {

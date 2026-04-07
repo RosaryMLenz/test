@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { checkAdminSession } from "@/lib/auth/checkAdminSession";
 import { getBookings } from "@/lib/actions/getBookings";
@@ -9,6 +9,7 @@ export async function GET(request: Request) {
         const date = searchParams.get("date");
 
         if (date) {
+            const prisma = getPrisma();
             const bookings = await prisma.booking.findMany({
                 where: { date },
                 select: { time: true },

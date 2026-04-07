@@ -77,35 +77,44 @@ export default function Step4({ formData, setFormData }: StepProps) {
     };
 
     useEffect(() => {
-        if (!selectedDate) {
-            setBookedTimes([]);
-            return;
-        }
-        setLoading(true);
-        fetch(`/api/bookings?date=${selectedDate}`)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Failed to fetch booked times');
-                }
-                return res.json();
-            })
-            .then((data) => {
-                setBookedTimes(data.bookedTimes || []);
-            })
-            .catch((error) => {
-                console.error(error);
+        const timeout = window.setTimeout(() => {
+            if (!selectedDate) {
                 setBookedTimes([]);
-                toast.error(language === "en"
-                    ? "Failed to load available times. All slots shown as available."
-                    : "Error al cargar horarios disponibles. Todos los slots se muestran como disponibles.");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+                return;
+            }
+
+            setLoading(true);
+            fetch(`/api/bookings?date=${selectedDate}`)
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch booked times');
+                    }
+                    return res.json();
+                })
+                .then((data) => {
+                    setBookedTimes(data.bookedTimes || []);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    setBookedTimes([]);
+                    toast.error(language === "en"
+                        ? "Failed to load available times. All slots shown as available."
+                        : "Error al cargar horarios disponibles. Todos los slots se muestran como disponibles.");
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }, 0);
+
+        return () => window.clearTimeout(timeout);
     }, [selectedDate, language]);
 
     useEffect(() => {
-        if (selectedTime && bookedTimes.includes(selectedTime)) {
+        if (!selectedTime || !bookedTimes.includes(selectedTime)) {
+            return;
+        }
+
+        const timeout = window.setTimeout(() => {
             setSelectedTime("");
             setFormData((prev) => ({ ...prev, time: "" }));
             toast(
@@ -113,7 +122,9 @@ export default function Step4({ formData, setFormData }: StepProps) {
                     ? "Your previously selected time is no longer available."
                     : "Tu hora seleccionada previamente ya no está disponible."
             );
-        }
+        }, 0);
+
+        return () => window.clearTimeout(timeout);
     }, [bookedTimes, selectedTime, language, setFormData]);
 
     return (

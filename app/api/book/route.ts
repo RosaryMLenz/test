@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { Resend } from 'resend';
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { checkAdminSession } from "@/lib/auth/checkAdminSession";
 import { isBookingSlotConflictError, publicBookingSchema } from "@/lib/bookingValidation";
 import {
@@ -63,6 +63,7 @@ export async function POST(req: Request): Promise<NextResponse> {
             );
         }
 
+        const prisma = getPrisma();
         await prisma.booking.create({
             data: {
                 ...bookingData,
@@ -144,7 +145,7 @@ export async function POST(req: Request): Promise<NextResponse> {
 
         if (error instanceof z.ZodError) {
             return NextResponse.json(
-                { message: 'Validation failed', errors: error.errors },
+                { message: 'Validation failed', errors: error.issues },
                 { status: 400 }
             );
         }
@@ -173,6 +174,7 @@ export async function GET() {
             );
         }
 
+        const prisma = getPrisma();
         const bookings = await prisma.booking.findMany({
             orderBy: {
                 createdAt: "desc"

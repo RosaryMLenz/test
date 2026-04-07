@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
-import type { User } from "@/lib/generated/prisma";
-import { prisma } from "@/lib/prisma";
+import type { User } from "@/lib/generated/prisma/client";
+import { getPrisma } from "@/lib/prisma";
 
 interface CheckAdminSessionResult {
     authorized: boolean;
@@ -22,6 +22,7 @@ export async function checkAdminSession(): Promise<CheckAdminSessionResult> {
         };
     }
 
+    const prisma = getPrisma();
     const user = await prisma.user.findUnique({
         where: { email: session.user.email },
     });

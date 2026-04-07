@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
@@ -20,6 +20,7 @@ export async function POST(req: Request) {
             );
         }
 
+        const prisma = getPrisma();
         const user = await prisma.user.findFirst({
             where: {
                 resetToken: token,
