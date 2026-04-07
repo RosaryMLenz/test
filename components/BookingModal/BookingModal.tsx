@@ -217,10 +217,10 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
             role="dialog"
             aria-modal="true"
             aria-labelledby="booking-modal-title"
-            className="fixed inset-0 dark:bg-black bg-white bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-white bg-opacity-50 p-4 dark:bg-black sm:items-center"
         >
             <div
-                className="bg-white rounded-lg w-full max-w-md p-4 sm:p-6 relative shadow-lg dark:bg-neutral-900 border-[0.5]"
+                className="relative max-h-[calc(100svh-2rem)] w-full max-w-md overflow-y-auto rounded-lg bg-white p-4 shadow-lg dark:bg-neutral-900 sm:p-6"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="w-full bg-gray-200 dark:bg-neutral-800 h-2 rounded mb-4 overflow-hidden">
