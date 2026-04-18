@@ -5,7 +5,7 @@ export default async function AdminPage() {
     const session = await checkAdminSession();
 
     if (session.authorized) {
-        redirect("/admin/dashboard");
+        redirect("/admin/dashboard?filter=today");
     }
 
     redirect("/admin/login");

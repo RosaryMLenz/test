@@ -1,58 +1,87 @@
-// Sidebar.tsx
 "use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useState, useEffect } from "react";
-import {LayoutDashboard, Moon, Sun, LogOut, Settings, MoreVertical} from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+    CalendarDays,
+    Clock3,
+    History,
+    LayoutDashboard,
+    ListFilter,
+    LogOut,
+    Moon,
+    Settings,
+    Sun,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-    DropdownMenu,
-    DropdownMenuTrigger,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import {
     AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
     AlertDialogContent,
+    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
-export default function Sidebar() {
+type DashboardFilter = "all" | "today" | "past" | "upcoming";
+
+interface SidebarProps {
+    currentFilter: DashboardFilter;
+    onNavigate?: () => void;
+}
+
+const bookingLinks = [
+    {
+        href: "/admin/dashboard?filter=today",
+        label: "Today's Bookings",
+        filter: "today" as const,
+        icon: CalendarDays,
+    },
+    {
+        href: "/admin/dashboard?filter=upcoming",
+        label: "Upcoming Bookings",
+        filter: "upcoming" as const,
+        icon: Clock3,
+    },
+    {
+        href: "/admin/dashboard?filter=past",
+        label: "Past Bookings",
+        filter: "past" as const,
+        icon: History,
+    },
+    {
+        href: "/admin/dashboard?filter=all",
+        label: "All Bookings",
+        filter: "all" as const,
+        icon: ListFilter,
+    },
+];
+
+export default function Sidebar({ currentFilter, onNavigate }: SidebarProps) {
     const router = useRouter();
     const [showConfirm, setShowConfirm] = useState(false);
-    const [theme, setTheme] = useState<'light' | 'dark'>('light');
-    const [isMounted, setIsMounted] = useState(false);
+    const [theme, setTheme] = useState<"light" | "dark">("light");
 
     useEffect(() => {
-        const timeout = window.setTimeout(() => {
-            setIsMounted(true);
-            const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-            const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            const finalTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
+        const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const finalTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
 
-            setTheme(finalTheme);
-            document.documentElement.classList.toggle('dark', finalTheme === 'dark');
-        }, 0);
-
-        return () => window.clearTimeout(timeout);
+        setTheme(finalTheme);
+        document.documentElement.classList.toggle("dark", finalTheme === "dark");
     }, []);
 
-    if (!isMounted) return null; // 🔥 Prevent hydration mismatch
-
     const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
+        const newTheme = theme === "light" ? "dark" : "light";
+
         setTheme(newTheme);
-        document.documentElement.classList.toggle('dark', newTheme === 'dark');
-        localStorage.setItem('theme', newTheme);
+        document.documentElement.classList.toggle("dark", newTheme === "dark");
+        localStorage.setItem("theme", newTheme);
     };
 
     const handleLogout = async () => {
@@ -61,79 +90,98 @@ export default function Sidebar() {
     };
 
     return (
-        <div className="flex w-64 flex-col border-r bg-background">
-            <nav className="flex flex-col gap-4 py-5 px-2 sm:py-5">
-                <Link href="/admin/dashboard" className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
-                    <LayoutDashboard className="h-4 w-4 transition-all group-hover:scale-110" />
-                    <span className="sr-only">Rainforest Automotive</span>
+        <div className="flex h-full w-72 flex-col bg-background">
+            <div className="flex h-full flex-col gap-6 p-4">
+                <Link
+                    href="/admin/dashboard?filter=today"
+                    onClick={onNavigate}
+                    className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-4 shadow-sm"
+                >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                        <LayoutDashboard className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-foreground">Admin Dashboard</p>
+                        <p className="truncate text-xs text-muted-foreground">Rainforest Automotive</p>
+                    </div>
                 </Link>
-                <Button variant="ghost" className="w-full justify-start" asChild>
-                    <Link href="/admin/dashboard">
-                        <LayoutDashboard className="mr-2 h-4 w-4" />
-                        Dashboard
-                    </Link>
-                </Button>
 
-                <Button variant="ghost" className="w-full justify-start pl-10" asChild>
-                    <Link href="/admin/dashboard?filter=today">
-                        <span className="text-sm">Today Bookings</span>
-                    </Link>
-                </Button>
+                <div className="space-y-3">
+                    <div className="px-3 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        Bookings
+                    </div>
+                    <nav className="space-y-1">
+                        {bookingLinks.map(({ href, label, filter, icon: Icon }) => {
+                            const isActive = currentFilter === filter;
 
-                <Button variant="ghost" className="w-full justify-start pl-10" asChild>
-                    <Link href="/admin/dashboard?filter=past">
-                        <span className="text-sm">Past Bookings</span>
-                    </Link>
-                </Button>
+                            return (
+                                <Link
+                                    key={filter}
+                                    href={href}
+                                    onClick={onNavigate}
+                                    className={cn(
+                                        "flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
+                                        isActive
+                                            ? "bg-primary text-primary-foreground shadow-sm"
+                                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                                    )}
+                                >
+                                    <Icon className="h-4 w-4 shrink-0" />
+                                    <span className="truncate">{label}</span>
+                                </Link>
+                            );
+                        })}
+                    </nav>
+                </div>
 
-                <Button variant="ghost" className="w-full justify-start pl-10" asChild>
-                    <Link href="/admin/dashboard?filter=upcoming">
-                        <span className="text-sm">Upcoming Bookings</span>
-                    </Link>
-                </Button>
+                <div className="mt-auto rounded-2xl border border-border/70 bg-card p-3 shadow-sm">
+                    <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                            <AvatarImage src="" alt="Admin" />
+                            <AvatarFallback>AD</AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-semibold text-foreground">Admin</p>
+                            <p className="truncate text-xs text-muted-foreground">Dashboard controls</p>
+                        </div>
+                    </div>
 
-                {/* Add more navigation items if needed */}
-            </nav>
-            <nav className="mt-auto flex flex-col gap-4 px-2 sm:py-5">
-                <div className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src="" alt="Admin" />
-                        <AvatarFallback>AD</AvatarFallback>
-                    </Avatar>
-                    <span>Admin</span>
                     <Button
-                        variant="ghost"
-                        className="ml-auto h-8 w-8"
-                        size="icon"
+                        type="button"
+                        variant="outline"
+                        className="mt-3 h-10 w-full justify-between rounded-xl px-3"
                         onClick={toggleTheme}
                     >
-                        {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-                        <span className="sr-only">Toggle theme</span>
+                        <span className="flex items-center gap-2">
+                            {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                            {theme === "light" ? "Dark mode" : "Light mode"}
+                        </span>
+                        <span className="text-xs text-muted-foreground">Theme</span>
                     </Button>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                                <span className="sr-only">More</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => router.push("/admin/account")}>
-                                <Settings className="mr-2 h-4 w-4" />
-                                Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setShowConfirm(true)}>
-                                <LogOut className="mr-2 h-4 w-4" />
-                                Sign Out
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            </nav>
 
-            {/* Logout Confirmation Dialog */}
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="h-10 rounded-xl"
+                            onClick={() => router.push("/admin/account")}
+                        >
+                            <Settings className="mr-2 h-4 w-4" />
+                            Account
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="h-10 rounded-xl"
+                            onClick={() => setShowConfirm(true)}
+                        >
+                            <LogOut className="mr-2 h-4 w-4" />
+                            Sign Out
+                        </Button>
+                    </div>
+                </div>
+            </div>
+
             <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
