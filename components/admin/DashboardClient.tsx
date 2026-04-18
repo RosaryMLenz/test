@@ -131,6 +131,17 @@ export default function DashboardClient() {
         return allBookings;
     }, [allBookings, currentFilter]);
 
+    const bookingCounts = useMemo<Record<DashboardFilter, number>>(() => {
+        const today = getTodayLocalDateString();
+
+        return {
+            all: allBookings.length,
+            today: allBookings.filter((booking) => booking.date === today).length,
+            past: allBookings.filter((booking) => booking.date && booking.date < today).length,
+            upcoming: allBookings.filter((booking) => booking.date && booking.date > today).length,
+        };
+    }, [allBookings]);
+
     useEffect(() => {
         setPagination((current) => ({ ...current, pageIndex: 0 }));
     }, [currentFilter]);
@@ -298,7 +309,11 @@ export default function DashboardClient() {
                         : "w-72 -translate-x-full border-r lg:w-0 lg:translate-x-0 lg:border-r-0"
                 )}
             >
-                <Sidebar currentFilter={currentFilter} onNavigate={closeSidebarOnMobile} />
+                <Sidebar
+                    currentFilter={currentFilter}
+                    bookingCounts={bookingCounts}
+                    onNavigate={closeSidebarOnMobile}
+                />
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col overflow-hidden">

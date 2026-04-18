@@ -32,6 +32,7 @@ type DashboardFilter = "all" | "today" | "past" | "upcoming";
 
 interface SidebarProps {
     currentFilter: DashboardFilter;
+    bookingCounts: Record<DashboardFilter, number>;
     onNavigate?: () => void;
 }
 
@@ -62,7 +63,7 @@ const bookingLinks = [
     },
 ];
 
-export default function Sidebar({ currentFilter, onNavigate }: SidebarProps) {
+export default function Sidebar({ currentFilter, bookingCounts, onNavigate }: SidebarProps) {
     const router = useRouter();
     const [showConfirm, setShowConfirm] = useState(false);
     const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -113,6 +114,7 @@ export default function Sidebar({ currentFilter, onNavigate }: SidebarProps) {
                     <nav className="space-y-1">
                         {bookingLinks.map(({ href, label, filter, icon: Icon }) => {
                             const isActive = currentFilter === filter;
+                            const count = bookingCounts[filter];
 
                             return (
                                 <Link
@@ -128,6 +130,16 @@ export default function Sidebar({ currentFilter, onNavigate }: SidebarProps) {
                                 >
                                     <Icon className="h-4 w-4 shrink-0" />
                                     <span className="truncate">{label}</span>
+                                    <span
+                                        className={cn(
+                                            "ml-auto inline-flex min-w-8 items-center justify-center rounded-full px-2 py-1 text-xs font-semibold",
+                                            isActive
+                                                ? "bg-primary-foreground/16 text-primary-foreground"
+                                                : "bg-muted text-foreground"
+                                        )}
+                                    >
+                                        {count}
+                                    </span>
                                 </Link>
                             );
                         })}
