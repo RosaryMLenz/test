@@ -67,7 +67,7 @@ export default function DashboardClient() {
     const searchParams = useSearchParams();
     const currentFilter = normalizeDashboardFilter(searchParams.get("filter"));
 
-    const [bookings, setBookings] = useState<Booking[]>([]);
+    const [allBookings, setAllBookings] = useState<Booking[]>([]);
     const [loading, setLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -93,19 +93,9 @@ export default function DashboardClient() {
                 }
 
                 const data = await response.json();
-                let nextBookings: Booking[] = data.bookings ?? [];
-                const today = getTodayLocalDateString();
-
-                if (currentFilter === "today") {
-                    nextBookings = nextBookings.filter((booking) => booking.date === today);
-                } else if (currentFilter === "past") {
-                    nextBookings = nextBookings.filter((booking) => booking.date && booking.date < today);
-                } else if (currentFilter === "upcoming") {
-                    nextBookings = nextBookings.filter((booking) => booking.date && booking.date > today);
-                }
 
                 if (!isCancelled) {
-                    setBookings(nextBookings);
+                    setAllBookings(data.bookings ?? []);
                 }
             } catch (error) {
                 console.error("Failed to fetch bookings:", error);
@@ -121,7 +111,25 @@ export default function DashboardClient() {
         return () => {
             isCancelled = true;
         };
-    }, [currentFilter]);
+    }, []);
+
+    const bookings = useMemo(() => {
+        const today = getTodayLocalDateString();
+
+        if (currentFilter === "today") {
+            return allBookings.filter((booking) => booking.date === today);
+        }
+
+        if (currentFilter === "past") {
+            return allBookings.filter((booking) => booking.date && booking.date < today);
+        }
+
+        if (currentFilter === "upcoming") {
+            return allBookings.filter((booking) => booking.date && booking.date > today);
+        }
+
+        return allBookings;
+    }, [allBookings, currentFilter]);
 
     useEffect(() => {
         setPagination((current) => ({ ...current, pageIndex: 0 }));
@@ -130,7 +138,7 @@ export default function DashboardClient() {
     const handleDelete = async (id: string) => {
         try {
             await fetch(`/api/bookings/${id}`, { method: "DELETE" });
-            setBookings((prev) => prev.filter((booking) => booking.id !== id));
+            setAllBookings((prev) => prev.filter((booking) => booking.id !== id));
             toast.success("Booking deleted");
         } catch (error) {
             console.error("Error deleting booking:", error);
@@ -248,7 +256,7 @@ export default function DashboardClient() {
             const ids = table.getSelectedRowModel().rows.map((row) => row.original.id);
 
             await Promise.all(ids.map((id) => fetch(`/api/bookings/${id}`, { method: "DELETE" })));
-            setBookings((prev) => prev.filter((booking) => !ids.includes(booking.id)));
+            setAllBookings((prev) => prev.filter((booking) => !ids.includes(booking.id)));
             table.resetRowSelection();
             toast.success("Selected bookings deleted");
         } catch (error) {
