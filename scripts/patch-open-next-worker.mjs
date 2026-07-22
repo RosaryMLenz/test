@@ -11,13 +11,16 @@ import {
 import { resolve } from "node:path";
 
 const handlerPath = resolve(".open-next/server-functions/default/handler.mjs");
+const serverFunctionRoot = resolve(".open-next/server-functions/default");
 const marker = "__rf21CreateRequire";
 const banner = `import { createRequire as ${marker} } from "node:module";\nconst require = ${marker}("file:///worker/handler.mjs");\n`;
 const source = readFileSync(handlerPath, "utf8")
+    .replace(banner, "")
     .replace(
         `import { createRequire as ${marker} } from "node:module";\nconst require = ${marker}(import.meta.url);\n`,
         "",
-    );
+    )
+    .replaceAll(`${serverFunctionRoot}/`, "./");
 
 if (!source.includes(marker)) {
     writeFileSync(handlerPath, `${banner}${source}`);
