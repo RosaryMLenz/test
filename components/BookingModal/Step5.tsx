@@ -57,7 +57,7 @@ export default function Step5({ formData, setFormData }: StepProps) {
                             }))
                         }
                         aria-describedby="acceptTermsDescription"
-                        className="mt-1.5"
+                        className="mt-0.5 size-6 rounded-md border-2 border-[#17643f] bg-white shadow-[0_0_0_3px_rgba(23,100,63,0.12)] data-[state=checked]:border-[#17643f] data-[state=checked]:bg-[#17643f] data-[state=checked]:text-white focus-visible:border-[#17643f] focus-visible:ring-[#17643f]/35 [&_svg]:size-5"
                     />
                     <label
                         htmlFor="acceptTerms"
