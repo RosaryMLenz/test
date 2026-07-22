@@ -12,7 +12,7 @@ const services = [
         descriptionEn: "Fresh oil. Smoother performance.",
         descriptionEs: "Aceite nuevo. Mejor rendimiento.",
         link: "/services/oil-change-service/oil-change",
-        image: "/redesign/generated/service-oil-cutout.png",
+        image: "/redesign/generated/service-oil-liqui-moly-cutout.png",
     },
     {
         titleEn: "Brakes",
@@ -20,7 +20,7 @@ const services = [
         descriptionEn: "Safe stops. Total confidence.",
         descriptionEs: "Frenado seguro. Confianza total.",
         link: "/services/brakes/brakes",
-        image: "/redesign/generated/service-brakes-cutout.png",
+        image: "/redesign/generated/service-brakes-brembo-cutout.png",
     },
     {
         titleEn: "Diagnostics",

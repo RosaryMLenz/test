@@ -40,7 +40,7 @@ export async function GET(request: Request) {
             const make = searchParams.get('make');
             if (!make) return NextResponse.json({ error: 'Make required' }, { status: 400 });
             const currentYear = new Date().getFullYear() + 1;
-            const startYear = 1981;
+            const startYear = 1950;
             const years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => ({ year: startYear + i }))
                 .sort((a, b) => b.year - a.year);
             data = { data: years };

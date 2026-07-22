@@ -8,9 +8,9 @@ export default function Page() {
         titleEs="Servicio de frenos"
         introEn="A careful brake inspection helps identify wear, noise, vibration, and stopping concerns before they become bigger problems."
         introEs="Una inspección cuidadosa ayuda a detectar desgaste, ruidos, vibraciones y problemas de frenado antes de que empeoren."
-        image="/redesign/generated/service-brakes-cutout.png"
-        altEn="Brake rotor and caliper"
-        altEs="Disco y cáliper de freno"
+        image="/redesign/generated/service-brakes-brembo-cutout.png"
+        altEn="Brake rotor and red Brembo caliper"
+        altEs="Disco de freno y cáliper Brembo rojo"
         includesEn={["Brake pad and rotor inspection", "Brake-fluid condition check", "Visual inspection of related hardware", "Clear explanation of recommended work"]}
         includesEs={["Inspección de pastillas y discos", "Revisión del líquido de frenos", "Inspección visual de componentes relacionados", "Explicación clara del trabajo recomendado"]}
         signsEn={["Squealing, grinding, or clicking", "The steering wheel shakes while braking", "The brake pedal feels soft or different", "The vehicle pulls while stopping"]}

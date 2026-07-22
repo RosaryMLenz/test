@@ -92,11 +92,13 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
     };
 
     const validateStep3 = (): boolean => {
-        if (!formData.make?.trim() || !formData.year?.trim() || !formData.model?.trim() || !formData.trim?.trim() || !formData.dropOffOrWait) {
-            toast.error(language === "en" ? "Please fill in all vehicle details and select an option before continuing." : "Por favor completa todos los detalles del vehículo y selecciona una opción antes de continuar.");
+        if (!formData.make?.trim() || !formData.year?.trim() || !formData.model?.trim() || !formData.dropOffOrWait) {
+            toast.error(language === "en" ? "Please select the vehicle make, year, model, and drop-off option before continuing." : "Selecciona la marca, el año, el modelo y la opción de entrega antes de continuar.");
             return false;
         }
-        if (!/^\d{4}$/.test(formData.year.trim())) {
+        const vehicleYear = Number(formData.year.trim());
+        const maximumVehicleYear = new Date().getFullYear() + 1;
+        if (!/^\d{4}$/.test(formData.year.trim()) || vehicleYear < 1950 || vehicleYear > maximumVehicleYear) {
             toast.error(language === "en" ? "Please enter a valid 4-digit year." : "Por favor ingresa un año válido de 4 dígitos.");
             return false;
         }
