@@ -64,6 +64,8 @@ function itemCounts(items: InspectionItem[]) {
 export default function InspectionHistory() {
     const [inspections, setInspections] = useState<VehicleInspection[]>([]);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState("");
+    const [loadAttempt, setLoadAttempt] = useState(0);
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState<Filter>("all");
     const [deleteInspection, setDeleteInspection] = useState<VehicleInspection | null>(null);
@@ -72,20 +74,24 @@ export default function InspectionHistory() {
     useEffect(() => {
         let cancelled = false;
         const load = async () => {
+            setLoading(true);
+            setLoadError("");
             try {
                 const response = await fetch("/api/inspections");
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error || "Failed to load inspections");
                 if (!cancelled) setInspections(data.inspections ?? []);
             } catch (error) {
-                toast.error(error instanceof Error ? error.message : "Failed to load inspections");
+                const message = error instanceof Error ? error.message : "Failed to load inspections";
+                if (!cancelled) setLoadError(message);
+                toast.error(message);
             } finally {
                 if (!cancelled) setLoading(false);
             }
         };
         void load();
         return () => { cancelled = true; };
-    }, []);
+    }, [loadAttempt]);
 
     const filtered = useMemo(() => {
         const normalizedQuery = query.trim().toLowerCase();
@@ -184,6 +190,13 @@ export default function InspectionHistory() {
 
                 {loading ? (
                     <div className="flex min-h-64 items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-[#17643f]" /></div>
+                ) : loadError ? (
+                    <div className="flex min-h-80 flex-col items-center justify-center px-5 text-center">
+                        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-red-600 dark:bg-red-950/40"><AlertTriangle className="h-6 w-6" /></div>
+                        <h2 className="text-lg font-bold text-slate-950 dark:text-white">Inspection records could not be loaded</h2>
+                        <p className="mt-1 max-w-md text-sm leading-6 text-slate-500">{loadError}. Retry the request, and contact the administrator if the problem continues.</p>
+                        <Button type="button" variant="outline" className="mt-5 rounded-xl" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>Retry</Button>
+                    </div>
                 ) : filtered.length === 0 ? (
                     <div className="flex min-h-80 flex-col items-center justify-center px-5 text-center">
                         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-[#17643f] dark:bg-emerald-950"><FileText className="h-6 w-6" /></div>

@@ -8,8 +8,13 @@ if (existsSync(".env.local")) {
   loadEnv({ path: ".env.local", override: false });
 }
 
-if (!process.env.DATABASE_URL && process.env.DATABASE_URL_UNPOOLED) {
-  process.env.DATABASE_URL = process.env.DATABASE_URL_UNPOOLED;
+const migrationDatabaseUrl =
+  process.env.DATABASE_URL_UNPOOLED ||
+  process.env.POSTGRES_URL_NON_POOLING ||
+  process.env.DATABASE_URL;
+
+if (migrationDatabaseUrl) {
+  process.env.DATABASE_URL = migrationDatabaseUrl;
 }
 
 if (process.env.DATABASE_URL) {

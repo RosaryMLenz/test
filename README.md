@@ -29,6 +29,8 @@ Both GitHub repositories contain application source only. To use the same custom
 
 Use `sslmode=verify-full` in PostgreSQL connection strings so the server certificate and hostname are verified. If your database provider supplies a different connection-string format, follow its current TLS guidance.
 
+Vercel deployments run `prisma migrate deploy` before building, using `DATABASE_URL_UNPOOLED` or `POSTGRES_URL_NON_POOLING` when available. This keeps each linked Vercel project's database schema synchronized with the committed migration history.
+
 Useful commands:
 
 ```bash

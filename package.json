@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
     "build:cloudflare": "opennextjs-cloudflare build && node scripts/patch-open-next-worker.mjs",
     "start": "next start",
     "lint": "eslint .",
