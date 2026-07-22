@@ -2,6 +2,7 @@ generator client {
   provider      = "prisma-client"
   output        = "../lib/generated/prisma"
   engineType    = "client"
+  runtime       = "cloudflare"
   compilerBuild = "small"
 }
 
