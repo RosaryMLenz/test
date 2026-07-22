@@ -1,7 +1,8 @@
 generator client {
-  provider   = "prisma-client"
-  output     = "../lib/generated/prisma"
-  engineType = "client"
+  provider      = "prisma-client"
+  output        = "../lib/generated/prisma"
+  engineType    = "client"
+  compilerBuild = "small"
 }
 
 datasource db {
@@ -27,9 +28,46 @@ model Booking {
   dropOffOrWait       String?
   createdAt           DateTime @default(now()) // UTC by default
   updatedAt           DateTime @updatedAt
+  inspections         VehicleInspection[]
 
   @@index([date, time]) // For fast lookup
   @@unique([date, time])
+}
+
+model VehicleInspection {
+  id                String   @id @default(cuid())
+  inspectionNumber  String   @unique
+  bookingId         String?
+  booking           Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  status            String   @default("draft")
+  inspectionDate    String
+  technicianName    String
+  customerName      String
+  customerEmail     String?
+  customerPhone     String?
+  year              String
+  make              String
+  model             String
+  trim              String?
+  vin               String
+  licensePlate      String?
+  mileage           String?
+  fuelLevel         String?
+  repairOrderNumber String?
+  customerConcern   String?
+  roadTestNotes     String?
+  mechanicSummary   String?
+  recommendations   String?
+  overallRating     String   @default("good")
+  items             Json
+  certified         Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([inspectionDate, status])
+  @@index([customerName])
+  @@index([vin])
+  @@index([bookingId])
 }
 
 model User {

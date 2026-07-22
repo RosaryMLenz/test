@@ -11,8 +11,15 @@ function createPrismaClient() {
         throw new Error("DATABASE_URL is required to initialize Prisma Client.");
     }
 
+    // pg currently treats `require` as full certificate verification, but that
+    // behavior is changing. Keep the existing secure behavior explicit.
+    const connectionString = process.env.DATABASE_URL.replace(
+        /([?&])sslmode=require(?=(&|$))/i,
+        "$1sslmode=verify-full",
+    );
+
     const adapter = new PrismaPg({
-        connectionString: process.env.DATABASE_URL,
+        connectionString,
     });
 
     return new PrismaClient({ adapter });

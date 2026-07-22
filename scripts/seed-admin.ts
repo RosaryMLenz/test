@@ -24,16 +24,31 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function seedAdmin() {
-    const hashedPassword = await bcrypt.hash("YourStrongAdminPassword", 10);
-    await prisma.user.create({
-        data: {
-            name: "Admin User",
-            email: "admin@rainforest21.com",
-            password: hashedPassword,
-            role: "admin",
-        },
+    const name = process.env.ADMIN_SEED_NAME?.trim() || "Admin User";
+    const email = process.env.ADMIN_SEED_EMAIL?.trim().toLowerCase();
+    const password = process.env.ADMIN_SEED_PASSWORD;
+
+    if (!email) {
+        throw new Error("ADMIN_SEED_EMAIL is required to seed the admin user.");
+    }
+
+    if (!password || password.length < 12) {
+        throw new Error("ADMIN_SEED_PASSWORD must contain at least 12 characters.");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = await prisma.user.upsert({
+        where: { email },
+        update: { name, password: hashedPassword, role: "admin" },
+        create: { name, email, password: hashedPassword, role: "admin" },
     });
-    console.log("Admin user created.");
+
+    console.log(`Admin account ready: ${user.email}`);
 }
 
-seedAdmin().finally(() => prisma.$disconnect());
+seedAdmin()
+    .catch((error) => {
+        console.error(error instanceof Error ? error.message : error);
+        process.exitCode = 1;
+    })
+    .finally(() => prisma.$disconnect());

@@ -1,23 +1,19 @@
-"use client";
-
-import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import ServiceDetailPage from "@/components/ServiceDetailPage";
 
 export default function Page() {
-    const { language } = useLanguage();
-
-    return (
-        <div className="min-h-[80vh] bg-white dark:bg-black text-black dark:text-white py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-                <h1 className="text-3xl sm:text-5xl font-bold mb-4 text-green-600 dark:text-green-400">
-                    {language === "en" ? "Car Diagnostic Test" : "Car Diagnostic Test"}
-                </h1>
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                    {language === "en"
-                        ? "More information coming soon about our car diagnostic test services."
-                        : "Próximamente más información sobre nuestros servicios de car diagnostic test."}
-                </p>
-            </div>
-        </div>
-    );
+    return <ServiceDetailPage
+        eyebrowEn="Find the cause"
+        eyebrowEs="Encontrar la causa"
+        titleEn="Vehicle diagnostics"
+        titleEs="Diagnóstico del vehículo"
+        introEn="Start with the symptoms. We use inspection and diagnostic information to narrow down the issue and explain the next step."
+        introEs="Empezamos con los síntomas. Usamos la inspección y la información de diagnóstico para identificar el problema y explicar el siguiente paso."
+        image="/redesign/generated/service-diagnostics-cutout.png"
+        altEn="Automotive diagnostic scan tool"
+        altEs="Escáner de diagnóstico automotriz"
+        includesEn={["Conversation about the symptoms", "Diagnostic-code scan when appropriate", "Focused visual and functional checks", "Explanation of findings and next steps"]}
+        includesEs={["Conversación sobre los síntomas", "Lectura de códigos cuando corresponda", "Revisiones visuales y funcionales enfocadas", "Explicación de hallazgos y próximos pasos"]}
+        signsEn={["A warning light is on", "The vehicle runs or starts differently", "You notice a new sound, smell, or vibration", "Performance or fuel economy has changed"]}
+        signsEs={["Se encendió una luz de advertencia", "El vehículo funciona o enciende diferente", "Notas un ruido, olor o vibración nueva", "Cambió el rendimiento o consumo de combustible"]}
+    />;
 }

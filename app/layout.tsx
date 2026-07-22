@@ -9,23 +9,36 @@ import ClientWrapper from '@/app/ClientWrapper'; // Import the new client compon
 
 // 🚀 SEO metadata
 export const metadata: Metadata = {
-    title: 'Rainforest Automotive',
+    metadataBase: new URL('https://rainforest21automotive.com'),
+    title: {
+        default: 'Rainforest21 Automotive | Las Vegas Auto Repair',
+        template: '%s | Rainforest21 Automotive',
+    },
     description:
-        'Rainforest Automotive: Reliable, affordable mechanic services in Las Vegas, NV. Book oil changes, brake repairs, diagnostics, and more with transparent pricing and fast service.',
+        'Straightforward auto repair and maintenance in Las Vegas, including oil changes, brakes, diagnostics, A/C service, and more.',
     openGraph: {
-        title: 'Rainforest Automotive',
+        title: 'Rainforest21 Automotive | Las Vegas Auto Repair',
         description:
-            'Reliable mechanic services in Las Vegas, NV. Book oil changes, brake repairs, and diagnostics easily online!',
+            'Honest repairs, clear answers, and dependable auto care in Las Vegas.',
         url: 'https://rainforest21automotive.com',
-        siteName: 'Rainforest Automotive',
+        siteName: 'Rainforest21 Automotive',
         locale: 'en_US',
         type: 'website',
+        images: [
+            {
+                url: '/og.png',
+                width: 1200,
+                height: 630,
+                alt: 'Rainforest21 Automotive — Honest repairs. Clear answers.',
+            },
+        ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Rainforest Automotive',
+        title: 'Rainforest21 Automotive | Las Vegas Auto Repair',
         description:
-            'Las Vegas trusted auto repair and mechanic service. Book online for quick, quality repairs.',
+            'Honest repairs, clear answers, and dependable auto care in Las Vegas.',
+        images: ['/og.png'],
     },
 };
 
@@ -44,23 +57,40 @@ export default function RootLayout({
                     __html: JSON.stringify({
                         '@context': 'https://schema.org',
                         '@type': 'AutoRepair',
-                        name: 'Rainforest Automotive',
+                        name: 'Rainforest21 Automotive',
                         description:
                             'Reliable mechanic services in Las Vegas, NV, including oil changes, brakes, and diagnostics.',
                         address: {
                             '@type': 'PostalAddress',
+                            streetAddress: '3280 Wynn Rd, Unit 4',
                             addressLocality: 'Las Vegas',
                             addressRegion: 'NV',
+                            postalCode: '89102',
+                            addressCountry: 'US',
                         },
-                        telephone: '+1-702-762-7573', // Replace with shop phone
-                        url: 'https://rainforest21automotive.com', // Replace with deployed URL
+                        telephone: '+1-702-762-7573',
+                        email: 'office@rainforest21automotive.com',
+                        url: 'https://rainforest21automotive.com',
+                        openingHoursSpecification: [
+                            {
+                                '@type': 'OpeningHoursSpecification',
+                                dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                                opens: '09:00',
+                                closes: '18:00',
+                            },
+                            {
+                                '@type': 'OpeningHoursSpecification',
+                                dayOfWeek: 'Saturday',
+                                opens: '09:00',
+                                closes: '12:00',
+                            },
+                        ],
                     }),
                 }}
             />
         </head>
 
         <body className="antialiased">
-        <div id="scroll-container" className="overflow-auto h-screen">
             <Providers>
                 <LanguageProvider>
                     <ClientWrapper>
@@ -69,7 +99,6 @@ export default function RootLayout({
                     </ClientWrapper>
                 </LanguageProvider>
             </Providers>
-        </div>
         </body>
 
         </html>

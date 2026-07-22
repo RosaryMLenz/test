@@ -13,8 +13,7 @@ import Done from './Done';
 import { toast } from "sonner";
 import { useLanguage } from "@/context/LanguageContext";
 import { BookingFormData } from "@/types/BookingFormData";
-import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
+import { X } from "lucide-react";
 
 interface BookingModalProps {
     isOpen: boolean;
@@ -49,15 +48,9 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { language, toggleLanguage } = useLanguage();
-    const { setTheme, resolvedTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
 
     const hasCarProblems = formData.reason?.split(", ").includes("Car Problems");
     const totalSteps = hasCarProblems ? 7 : 6;
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     const validateStep1 = (): boolean => {
         const name = formData.name.trim();
@@ -199,7 +192,7 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
     }, [hasCarProblems]);
 
     const progressPercent = (currentStep / (totalSteps - 1)) * 100;
-    const barColor = currentStep === totalSteps - 1 ? '#22c55e' : '#3b82f6';
+    const barColor = '#17643f';
     const commonProps = { formData, setFormData };
 
     const renderStep = () => {
@@ -222,29 +215,26 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
             role="dialog"
             aria-modal="true"
             aria-labelledby="booking-modal-title"
-            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-white bg-opacity-50 p-4 dark:bg-black sm:items-center"
+            className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-[#07110e]/75 p-3 backdrop-blur-sm sm:items-center sm:p-6"
         >
             <div
-                className="relative max-h-[calc(100svh-2rem)] w-full max-w-md overflow-y-auto rounded-lg bg-white p-4 shadow-lg dark:bg-neutral-900 sm:p-6"
+                className="relative max-h-[calc(100svh-1.5rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-[#9fb0a3] bg-[#f7f4ec] p-4 text-[#111915] shadow-2xl sm:max-h-[calc(100svh-3rem)] sm:p-6"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="w-full bg-gray-200 dark:bg-neutral-800 h-2 rounded mb-4 overflow-hidden">
+                <h2 id="booking-modal-title" className="sr-only">
+                    {language === "en" ? "Book an appointment" : "Reservar una cita"}
+                </h2>
+                <div className="mb-4 h-1.5 w-full overflow-hidden rounded bg-[#d8dfd9]">
                     <div className="h-full transition-all duration-300 rounded" style={{ width: `${progressPercent}%`, backgroundColor: barColor }}></div>
                 </div>
 
-                <div className="flex justify-end space-x-2 mb-2">
-                    <button onClick={toggleLanguage} className="border border-green-500 dark:border-green-400 px-2 py-1 rounded text-xs hover:bg-green-500 dark:hover:bg-green-400 hover:text-white dark:hover:text-black transition-colors">
+                <div className="mb-2 flex justify-end gap-2">
+                    <button onClick={toggleLanguage} className="rounded border border-[#17643f] px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#17643f] transition hover:bg-[#e5ece6]">
                         {language === "en" ? "ES" : "EN"}
                     </button>
-                    {mounted && (
-                        <button
-                            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                            className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                            aria-label="Toggle Theme"
-                        >
-                            {resolvedTheme === "dark" ? <Sun size={16} className="text-yellow-400" /> : <Moon size={16} className="text-gray-700" />}
-                        </button>
-                    )}
+                    <button onClick={handleCancel} className="grid h-8 w-8 place-items-center rounded border border-[#b8c3ba] text-[#445048] transition hover:border-[#17643f] hover:text-[#17643f]" aria-label={language === "en" ? "Close booking form" : "Cerrar formulario"}>
+                        <X size={17} />
+                    </button>
                 </div>
 
                 {renderStep()}
@@ -266,17 +256,17 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
 
                 {currentStep < totalSteps - 1 && (
                     <div className="flex justify-between items-center mt-6">
-                        <button onClick={handleBack} disabled={currentStep === 0} className={`px-4 py-2 rounded transition ${currentStep === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-500' : 'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200'}`}>
+                        <button onClick={handleBack} disabled={currentStep === 0} className={`rounded px-4 py-2 text-sm font-bold transition ${currentStep === 0 ? 'cursor-not-allowed bg-[#e1e4e1] text-[#9aa29c]' : 'border border-[#aeb9b0] bg-transparent text-[#38443c] hover:bg-[#e5ece6]'}`}>
                             ← {language === "en" ? "Back" : "Atrás"}
                         </button>
 
                         <div className="flex gap-2">
-                            <button onClick={handleCancel} className="px-4 py-2 rounded border border-red-500 text-red-500 hover:bg-red-50 dark:hover:bg-neutral-800 transition">
+                            <button onClick={handleCancel} className="rounded px-3 py-2 text-sm font-bold text-[#6a3838] transition hover:bg-[#f2e7e4] sm:px-4">
                                 {language === "en" ? "Cancel" : "Cancelar"}
                             </button>
                             <button
                                 onClick={currentStep === totalSteps - 2 ? handleSubmit : handleNext}
-                                className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50"
+                                className="rounded bg-[#17643f] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#0f4d30] disabled:opacity-50"
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? (language === "en" ? "Submitting..." : "Enviando...") : currentStep === totalSteps - 2 ? (language === "en" ? 'Submit' : 'Enviar') : (language === "en" ? 'Continue' : 'Continuar')}
@@ -285,12 +275,18 @@ export default function BookingModal({ isOpen, onCloseAction }: BookingModalProp
                     </div>
                 )}
 
-                <div className="mt-2 pt-7 text-center text-sm font-bold uppercase tracking-[0.2em] font-mono">
-                    <a href="https://portafolio-beige-ten.vercel.app" className="text-neutral-700 dark:text-neutral-200" target="_blank"
-                       rel="noopener noreferrer">
-                        powered by Frank
+                <div className="mt-6 border-t border-[#d4dbd5] pt-4 text-center text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[#667169]">
+                    <span>{language === "en" ? "Website by " : "Sitio web por "}</span>
+                    <a
+                        href="https://frank-hernandez.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#17643f] underline decoration-[#17643f]/35 underline-offset-4 transition hover:decoration-[#17643f]"
+                    >
+                        frank-hernandez.com
                     </a>
                 </div>
+
             </div>
         </div>
     );

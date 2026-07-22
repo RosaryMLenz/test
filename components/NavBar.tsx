@@ -1,114 +1,103 @@
+"use client";
 
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Sun, Moon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Menu, Phone, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import BrandLogo from "@/components/BrandLogo";
 
 const links = [
-    { href: "/", labelEn: "Home", labelEs: "Inicio" },
     { href: "/services", labelEn: "Services", labelEs: "Servicios" },
+    { href: "/about", labelEn: "About", labelEs: "Nosotros" },
     { href: "/contact", labelEn: "Contact", labelEs: "Contacto" },
 ];
 
 export default function NavBar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const pathname = usePathname();
-    const { setTheme, resolvedTheme } = useTheme();
     const { language, toggleLanguage } = useLanguage();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        const timeout = window.setTimeout(() => {
-            setMounted(true);
-        }, 0);
-
-        return () => window.clearTimeout(timeout);
-    }, []);
 
     return (
-        <header className="bg-white text-black dark:bg-black dark:text-white border-b border-gray-200 dark:border-gray-800 transition-colors">
-            <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-                <Link href="/" className="text-lg font-semibold tracking-tight hover:text-green-500 dark:hover:text-green-400 transition-colors">
-                    Rainforest21 Automotive
-                </Link>
+        <header className="border-b border-[#cbd2cb] bg-[#f7f4ec]/95 text-[#111915] backdrop-blur-md">
+            <div className="mx-auto flex h-[5.25rem] max-w-[92rem] items-center justify-between px-5 sm:px-8 lg:px-12">
+                <BrandLogo />
 
-                <div className="flex items-center space-x-4">
-                    {/* Desktop Nav Links */}
-                    <nav className="hidden md:flex space-x-4 items-center">
-                        {links.map((link) => (
+                <nav className="hidden items-center gap-8 lg:flex" aria-label={language === "en" ? "Main navigation" : "Navegación principal"}>
+                    {links.map((link) => {
+                        const active = pathname === link.href || pathname?.startsWith(`${link.href}/`);
+                        return (
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={cn(
-                                    "transition-colors hover:text-green-500 dark:hover:text-green-400",
-                                    pathname === link.href ? "text-green-600 dark:text-green-400 font-medium" : ""
-                                )}
+                                className={`rf-nav-link ${active ? "text-[#17643f]" : "text-[#111915]"}`}
                             >
                                 {language === "en" ? link.labelEn : link.labelEs}
                             </Link>
-                        ))}
-                    </nav>
+                        );
+                    })}
+                </nav>
 
-                    {/* Language Toggle - Always Visible */}
+                <div className="hidden items-center gap-3 lg:flex">
                     <button
+                        type="button"
                         onClick={toggleLanguage}
-                        className="border border-green-500 dark:border-green-400 px-2 py-1 rounded text-sm hover:bg-green-500 dark:hover:bg-green-400 hover:text-white dark:hover:text-black transition-colors"
+                        className="rf-nav-link px-2 text-[#111915]"
+                        aria-label={language === "en" ? "Cambiar a español" : "Switch to English"}
                     >
-                        {language === "en" ? "ES" : "EN"}
+                        <span className={language === "en" ? "text-[#17643f]" : ""}>EN</span>
+                        <span className="px-1 text-[#7b857e]">/</span>
+                        <span className={language === "es" ? "text-[#17643f]" : ""}>ES</span>
                     </button>
-
-                    {/* Theme Toggle - Always Visible */}
-                    {mounted && (
-                        <button
-                            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                            className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                            aria-label="Toggle Theme"
-                        >
-                            {resolvedTheme === "dark" ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-gray-700" />}
-                        </button>
-                    )}
-
-                    {/* Mobile Menu Toggle */}
-                    <button
-                        onClick={() => setMenuOpen(!menuOpen)}
-                        aria-label="Toggle Menu"
-                        className="md:hidden p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    >
-                        {menuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+                    <a href="tel:+17027627573" className="rf-button rf-button-secondary min-h-12 px-5">
+                        <Phone size={17} aria-hidden="true" />
+                        {language === "en" ? "Call" : "Llamar"}
+                    </a>
+                    <Link href="/booking" className="rf-button rf-button-primary min-h-12 px-7">
+                        {language === "en" ? "Book service" : "Reservar servicio"}
+                    </Link>
                 </div>
+
+                <button
+                    type="button"
+                    onClick={() => setMenuOpen((open) => !open)}
+                    aria-expanded={menuOpen}
+                    aria-controls="mobile-navigation"
+                    aria-label={language === "en" ? "Toggle navigation" : "Abrir navegación"}
+                    className="grid h-12 w-12 place-items-center rounded-md border border-[#b8c2ba] text-[#164e34] lg:hidden"
+                >
+                    {menuOpen ? <X size={25} /> : <Menu size={27} />}
+                </button>
             </div>
 
-            {/* Mobile Nav with animation - Only Links */}
-            <AnimatePresence>
-                {menuOpen && (
-                    <motion.nav
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="md:hidden bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 px-4 py-4 space-y-4"
-                    >
+            {menuOpen && (
+                <nav id="mobile-navigation" className="border-t border-[#d7ddd8] bg-[#f7f4ec] px-5 py-5 lg:hidden" aria-label="Mobile navigation">
+                    <div className="mx-auto flex max-w-[92rem] flex-col">
                         {links.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 onClick={() => setMenuOpen(false)}
-                                className={cn(
-                                    "block transition-colors hover:text-green-500 dark:hover:text-green-400",
-                                    pathname === link.href ? "text-green-600 dark:text-green-400 font-medium" : ""
-                                )}
+                                className="border-b border-[#d7ddd8] py-4 font-display text-2xl uppercase tracking-wide text-[#111915]"
                             >
                                 {language === "en" ? link.labelEn : link.labelEs}
                             </Link>
                         ))}
-                    </motion.nav>
-                )}
-            </AnimatePresence>
+                        <button type="button" onClick={toggleLanguage} className="rf-nav-link mt-5 w-fit py-2 text-[#17643f]">
+                            {language === "en" ? "Ver en español" : "View in English"}
+                        </button>
+                        <div className="mt-4 grid grid-cols-2 gap-3">
+                            <a href="tel:+17027627573" className="rf-button rf-button-secondary">
+                                <Phone size={17} aria-hidden="true" />
+                                {language === "en" ? "Call" : "Llamar"}
+                            </a>
+                            <Link href="/booking" onClick={() => setMenuOpen(false)} className="rf-button rf-button-primary flex-1">
+                                {language === "en" ? "Book service" : "Reservar"}
+                            </Link>
+                        </div>
+                    </div>
+                </nav>
+            )}
         </header>
     );
 }

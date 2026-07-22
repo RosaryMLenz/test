@@ -12,6 +12,13 @@ if (!process.env.DATABASE_URL && process.env.DATABASE_URL_UNPOOLED) {
   process.env.DATABASE_URL = process.env.DATABASE_URL_UNPOOLED;
 }
 
+if (process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = process.env.DATABASE_URL.replace(
+    /([?&])sslmode=require(?=(&|$))/i,
+    "$1sslmode=verify-full",
+  );
+}
+
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {

@@ -16,14 +16,10 @@ export default function ClientWrapper({
     return (
         <>
             {!isAdmin && <StickyNavWrapper />}
-            <main className={!isAdmin ? "pt-16" : ""}>
+            <main className={isAdmin ? undefined : "pt-[5.25rem]"}>
                 {children}
             </main>
-            {!isAdmin && (
-                <footer>
-                    <Footer />
-                </footer>
-            )}
+            {!isAdmin && <Footer />}
         </>
     );
 }

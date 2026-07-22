@@ -8,6 +8,9 @@ const eslintConfig = [
       "dist/**",                    // ✅ ignore compiled output
       '**/node_modules/**',
       '**/.next/**',
+      '**/.open-next/**',
+      '**/.vercel/**',
+      '**/.wrangler/**',
       '**/dist/**',
       '**/build/**',
       '**/public/**',

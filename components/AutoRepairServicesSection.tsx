@@ -1,138 +1,116 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, Clock3, Languages, ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import {
-    Droplet,
-    BatteryCharging,
-    CircleDot,
-    Circle,
-    Snowflake,
-    Car,
-} from "lucide-react";
 
 const services = [
     {
-        titleEn: "Oil Change",
-        titleEs: "Cambio de Aceite",
-        descriptionEn:
-            "Regularly changing your oil and filter will help the engine work its best.",
-        descriptionEs:
-            "Cambiar regularmente el aceite y el filtro ayudará a que el motor funcione de la mejor manera.",
-        linkLabelEn: "Oil Change Services",
-        linkLabelEs: "Servicios de Cambio de Aceite",
-        link: "/services/oil-change",
-        icon: Droplet,
-    },
-    {
-        titleEn: "Batteries",
-        titleEs: "Baterías",
-        descriptionEn:
-            "We test, install, and replace car batteries to keep your vehicle powered and reliable.",
-        descriptionEs:
-            "Probamos, instalamos y reemplazamos baterías para mantener tu vehículo con energía y confiable.",
-        linkLabelEn: "Battery Services",
-        linkLabelEs: "Servicios de Baterías",
-        link: "/services/batteries",
-        icon: BatteryCharging,
+        titleEn: "Oil change",
+        titleEs: "Cambio de aceite",
+        descriptionEn: "Fresh oil. Smoother performance.",
+        descriptionEs: "Aceite nuevo. Mejor rendimiento.",
+        link: "/services/oil-change-service/oil-change",
+        image: "/redesign/generated/service-oil-cutout.png",
     },
     {
         titleEn: "Brakes",
         titleEs: "Frenos",
-        descriptionEn:
-            "Brake maintenance is crucial to keeping your vehicle operating safely.",
-        descriptionEs:
-            "El mantenimiento de los frenos es crucial para mantener la seguridad de tu vehículo.",
-        linkLabelEn: "Brake Repair Services",
-        linkLabelEs: "Servicios de Reparación de Frenos",
-        link: "/services/brakes",
-        icon: CircleDot,
+        descriptionEn: "Safe stops. Total confidence.",
+        descriptionEs: "Frenado seguro. Confianza total.",
+        link: "/services/brakes/brakes",
+        image: "/redesign/generated/service-brakes-cutout.png",
     },
     {
-        titleEn: "Tires & Wheels",
-        titleEs: "Llantas y Ruedas",
-        descriptionEn:
-            "Regularly inspect and service your tires to prevent a blowout, a flat, or a costly accident.",
-        descriptionEs:
-            "Inspecciona y da servicio regularmente a tus llantas para prevenir reventones, ponchaduras o accidentes costosos.",
-        linkLabelEn: "Tire & Wheel Services",
-        linkLabelEs: "Servicios de Llantas y Ruedas",
-        link: "/services/tires-wheels",
-        icon: Circle,
+        titleEn: "Diagnostics",
+        titleEs: "Diagnóstico",
+        descriptionEn: "Pinpoint issues. Clear answers.",
+        descriptionEs: "Detectamos problemas. Damos respuestas claras.",
+        link: "/services/auto-repair-services/car-diagnostic-test",
+        image: "/redesign/generated/service-diagnostics-cutout.png",
     },
     {
-        titleEn: "A/C",
-        titleEs: "Aire Acondicionado",
-        descriptionEn:
-            "Keep your car cool and increase your gas mileage with regular AC checks.",
-        descriptionEs:
-            "Mantén tu coche fresco y mejora el rendimiento de combustible con revisiones regulares del aire acondicionado.",
-        linkLabelEn: "A/C Repair Services",
-        linkLabelEs: "Servicios de Reparación de A/C",
-        link: "/services/ac-repair",
-        icon: Snowflake,
-    },
-    {
-        titleEn: "Steering & Suspension",
-        titleEs: "Dirección y Suspensión",
-        descriptionEn:
-            "Your car’s steering and suspension work together to keep your ride smooth and handling precise.",
-        descriptionEs:
-            "La dirección y suspensión de tu coche trabajan juntas para mantener un manejo suave y preciso.",
-        linkLabelEn: "Steering & Suspension Services",
-        linkLabelEs: "Servicios de Dirección y Suspensión",
-        link: "/services/steering-suspension",
-        icon: Car,
+        titleEn: "A/C service",
+        titleEs: "Servicio de A/C",
+        descriptionEn: "Cool air. Every time.",
+        descriptionEs: "Aire fresco. Siempre.",
+        link: "/services/air-conditioning/air-conditioning-service",
+        image: "/redesign/generated/service-ac-cutout.png",
     },
 ];
 
 export default function AutoRepairServicesSection() {
-    const router = useRouter();
     const { language } = useLanguage();
 
+    const trustItems = [
+        { icon: Languages, en: "Bilingual service", es: "Servicio bilingüe" },
+        { icon: ShieldCheck, en: "Warranty-backed work", es: "Trabajo con garantía" },
+        { icon: Clock3, en: "Mon–Fri 9–6", es: "Lun–Vie 9–6" },
+    ];
+
     return (
-        <section className="max-w-6xl mx-auto px-4 py-10">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8">
-                {language === "en" ? "Auto Repair Services" : "Servicios de Reparación Automotriz"}
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {services.map((service) => (
-                    <div
-                        key={service.titleEn}
-                        className={cn(
-                            "bg-white dark:bg-neutral-900 rounded-xl p-5 shadow hover:shadow-lg transition cursor-pointer flex items-start gap-4"
-                        )}
-                        onClick={() => router.push(service.link)}
-                    >
-                        <div className="flex-shrink-0 p-2 rounded-full bg-green-100 dark:bg-green-800">
-                            <service.icon
-                                size={28}
-                                className="text-green-700 dark:text-green-200"
-                            />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-semibold mb-1 text-green-800 dark:text-green-200">
-                                {language === "en" ? service.titleEn : service.titleEs}
-                            </h3>
-                            <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                                {language === "en" ? service.descriptionEn : service.descriptionEs}
-                            </p>
-                            <span className="text-green-600 dark:text-green-400 font-medium underline">
-                                {language === "en" ? service.linkLabelEn : service.linkLabelEs}
+        <section id="services" className="border-y border-[#cbd2cb] bg-[#f7f4ec]">
+            <div className="mx-auto max-w-[92rem] px-5 py-8 sm:px-8 lg:px-12">
+                <div className="grid overflow-hidden rounded-xl border border-[#b9c4bc] sm:grid-cols-3">
+                    {trustItems.map(({ icon: Icon, en, es }, index) => (
+                        <div key={en} className={`flex min-h-20 items-center justify-center gap-3 px-5 py-4 ${index > 0 ? "border-t border-[#cbd2cb] sm:border-l sm:border-t-0" : ""}`}>
+                            <Icon className="text-[#17643f]" size={25} aria-hidden="true" />
+                            <span className="text-sm font-black uppercase tracking-[0.12em] text-[#111915]">
+                                {language === "en" ? en : es}
                             </span>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
 
-            <div className="text-center mt-10">
-                <button
-                    onClick={() => router.push("/services")}
-                    className="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-3 rounded transition"
-                >
-                    {language === "en" ? "See All Services" : "Ver Todos los Servicios"}
-                </button>
+                <div className="pb-16 pt-20 sm:pb-24 sm:pt-28">
+                    <div className="flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
+                        <div>
+                            <div className="rf-kicker">{language === "en" ? "What we do" : "Lo que hacemos"}</div>
+                            <h2 className="mt-5 font-display text-6xl uppercase leading-none tracking-[-0.03em] text-[#101713] sm:text-7xl">
+                                {language === "en" ? "Popular services" : "Servicios populares"}
+                            </h2>
+                            <p className="mt-4 text-lg text-[#4b554e]">
+                                {language === "en" ? "Everyday maintenance and repairs, explained clearly." : "Mantenimiento y reparaciones explicados con claridad."}
+                            </p>
+                        </div>
+                        <Link href="/services" className="inline-flex items-center gap-2 font-bold text-[#17643f] hover:underline">
+                            {language === "en" ? "View all services" : "Ver todos los servicios"}
+                            <ArrowRight size={19} aria-hidden="true" />
+                        </Link>
+                    </div>
+
+                    <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-11 sm:gap-5 xl:grid-cols-4">
+                        {services.map((service) => (
+                            <Link
+                                key={service.titleEn}
+                                href={service.link}
+                                className="group overflow-hidden rounded-xl border border-[#b9c4bc] bg-[#fbf9f3] transition duration-200 hover:-translate-y-1 hover:border-[#17643f] hover:shadow-[0_18px_45px_rgba(16,23,19,0.08)] sm:rounded-2xl"
+                            >
+                                <div className="relative aspect-square overflow-hidden bg-[#f7f4ec]">
+                                    <Image
+                                        src={service.image}
+                                        alt=""
+                                        fill
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                                        className="object-contain p-4 drop-shadow-[0_14px_18px_rgba(16,23,19,0.15)] transition duration-300 group-hover:scale-[1.025] sm:p-8"
+                                    />
+                                </div>
+                                <div className="flex items-end justify-between gap-2 border-t border-[#d3d9d4] p-3 sm:gap-4 sm:p-6">
+                                    <div>
+                                        <h3 className="font-display text-lg uppercase leading-tight tracking-wide text-[#101713] sm:text-2xl">
+                                            {language === "en" ? service.titleEn : service.titleEs}
+                                        </h3>
+                                        <p className="mt-1 hidden text-sm text-[#59635c] sm:block">
+                                            {language === "en" ? service.descriptionEn : service.descriptionEs}
+                                        </p>
+                                    </div>
+                                    <ArrowRight className="hidden shrink-0 text-[#17643f] transition-transform group-hover:translate-x-1 sm:block" size={23} aria-hidden="true" />
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
             </div>
         </section>
     );

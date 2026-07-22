@@ -39,7 +39,8 @@ export async function POST(req: Request) {
 
         const resend = new Resend(process.env.RESEND_API_KEY);
         const body = await req.json();
-        const { email, website, formStartedAt } = forgotPasswordSchema.parse(body);
+        const { email: submittedEmail, website, formStartedAt } = forgotPasswordSchema.parse(body);
+        const email = submittedEmail.toLowerCase();
 
         const humanSubmission = validateHumanSubmission(
             { website, formStartedAt },
@@ -86,11 +87,12 @@ export async function POST(req: Request) {
         }
 
         const token = crypto.randomBytes(32).toString("hex");
+        const storedToken = crypto.createHash("sha256").update(token).digest("hex");
         const expiry = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
 
         await prisma.user.update({
             where: { email },
-            data: { resetToken: token, resetTokenExpiry: expiry },
+            data: { resetToken: storedToken, resetTokenExpiry: expiry },
         });
 
         const baseUrl =
@@ -99,7 +101,7 @@ export async function POST(req: Request) {
         const resetUrl = `${baseUrl}/admin/reset-password?token=${token}`;
 
         await resend.emails.send({
-            from: "Rainforest Automotive <noreply@rainforestautomotive.work>",
+            from: "Rainforest21 Automotive <noreply@rainforestautomotive.work>",
             to: email,
             subject: "Password Reset Request",
             html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link expires in 1 hour.</p>`,

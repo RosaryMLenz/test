@@ -7,7 +7,7 @@ import React from "react";
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <SessionProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
                 {children}
             </ThemeProvider>
         </SessionProvider>

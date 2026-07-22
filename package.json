@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:cloudflare": "opennextjs-cloudflare build && node scripts/patch-open-next-worker.mjs",
     "start": "next start",
     "lint": "eslint .",
     "postinstall": "prisma generate",
@@ -15,6 +16,7 @@
     "db:generate": "npm run prisma:local -- generate",
     "db:migrate:status": "npm run prisma:local -- migrate status",
     "db:migrate:deploy": "npm run prisma:local -- migrate deploy",
+    "db:seed-admin": "node --loader ts-node/esm scripts/seed-admin.ts",
     "db:studio": "npm run prisma:local -- studio",
     "update:makes": "NODE_OPTIONS='--loader ts-node/esm' node scripts/fetchCarMakes.ts"
   },
@@ -24,8 +26,8 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@heroicons/react": "^2.2.0",
-    "@prisma/adapter-pg": "^7.7.0",
-    "@prisma/client": "^7.7.0",
+    "@prisma/adapter-pg": "^7.9.0",
+    "@prisma/client": "^7.9.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-checkbox": "^1.3.3",
@@ -48,10 +50,11 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.20",
+    "jspdf": "^4.2.1",
     "lucide-react": "^1.7.0",
     "motion": "^12.38.0",
-    "next": "^16.2.2",
-    "next-auth": "^4.24.13",
+    "next": "^16.2.11",
+    "next-auth": "^4.24.15",
     "next-themes": "^0.4.6",
     "node-fetch": "^3.3.2",
     "react": "^19.2.4",
@@ -59,13 +62,14 @@
     "react-dom": "^19.2.4",
     "react-hook-form": "^7.72.1",
     "recharts": "^3.8.1",
-    "resend": "^6.10.0",
+    "resend": "^6.17.2",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "vaul": "^1.1.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/postcss": "^4.2.2",
     "@tsconfig/node20": "^20.1.9",
     "@types/node": "^20.19.39",
@@ -73,11 +77,16 @@
     "@types/react-dom": "^19.2.3",
     "dotenv": "^17.4.1",
     "eslint": "^9.39.4",
-    "eslint-config-next": "^16.2.2",
-    "prisma": "^7.7.0",
+    "eslint-config-next": "^16.2.11",
+    "prisma": "^7.9.0",
     "tailwindcss": "^4.2.2",
     "ts-node": "^10.9.2",
     "tw-animate-css": "^1.4.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "wrangler": "^4.113.0"
+  },
+  "overrides": {
+    "postcss": "8.5.21",
+    "sharp": "0.35.3"
   }
 }

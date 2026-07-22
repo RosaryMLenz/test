@@ -62,7 +62,7 @@ export default function Step3CarProblems({ formData, setFormData }: StepProps) {
                                 className={cn(
                                     "flex items-center rounded-lg border p-3 cursor-pointer transition select-none",
                                     isSelected
-                                        ? "border-blue-600 bg-blue-50 dark:bg-blue-900 dark:border-blue-500"
+                                        ? "border-[#17643f] bg-[#e5ece6]"
                                         : "border-gray-300 hover:bg-gray-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
                                 )}
                             >

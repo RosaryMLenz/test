@@ -1,29 +1,51 @@
 import { getPrisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { z } from "zod";
+import { enforceRateLimits, getClientIp } from "@/lib/requestProtection";
+
+const resetPasswordSchema = z.object({
+    token: z.string().regex(/^[a-f0-9]{64}$/i),
+    password: z.string().min(12).max(128),
+});
 
 export async function POST(req: Request) {
     try {
-        const { token, password } = await req.json();
+        const { token, password } = resetPasswordSchema.parse(await req.json());
 
-        if (!token || !password) {
+        const rateLimit = await enforceRateLimits([
+            {
+                scope: "reset-password",
+                bucket: "ip",
+                identifier: getClientIp(req),
+                limit: 10,
+                windowMs: 1000 * 60 * 15,
+                blockMs: 1000 * 60 * 30,
+            },
+            {
+                scope: "reset-password",
+                bucket: "token",
+                identifier: token,
+                limit: 5,
+                windowMs: 1000 * 60 * 15,
+                blockMs: 1000 * 60 * 30,
+            },
+        ]);
+
+        if (rateLimit) {
             return NextResponse.json(
-                { error: "Missing token or password" },
-                { status: 400 },
+                { error: "Too many reset attempts. Please wait before trying again." },
+                { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds) } },
             );
         }
 
-        if (password.length < 6) {
-            return NextResponse.json(
-                { error: "Password must be at least 6 characters" },
-                { status: 400 },
-            );
-        }
+        const storedToken = crypto.createHash("sha256").update(token).digest("hex");
 
         const prisma = getPrisma();
         const user = await prisma.user.findFirst({
             where: {
-                resetToken: token,
+                resetToken: storedToken,
                 resetTokenExpiry: { gte: new Date() },
             },
         });
@@ -35,7 +57,7 @@ export async function POST(req: Request) {
             );
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 12);
 
         await prisma.user.update({
             where: { id: user.id },
@@ -49,6 +71,14 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Password reset successfully" });
     } catch (error) {
         console.error("Reset password error:", error);
+
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { error: "Use a valid reset link and a password of at least 12 characters." },
+                { status: 400 },
+            );
+        }
+
         return NextResponse.json(
             { error: "Internal server error" },
             { status: 500 },

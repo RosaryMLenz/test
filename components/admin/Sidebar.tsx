@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import {
     CalendarDays,
     Clock3,
+    ClipboardCheck,
+    ClipboardPlus,
     History,
     LayoutDashboard,
     ListFilter,
@@ -31,8 +33,8 @@ import { cn } from "@/lib/utils";
 type DashboardFilter = "all" | "today" | "past" | "upcoming";
 
 interface SidebarProps {
-    currentFilter: DashboardFilter;
-    bookingCounts: Record<DashboardFilter, number>;
+    currentFilter?: DashboardFilter;
+    bookingCounts?: Record<DashboardFilter, number>;
     onNavigate?: () => void;
 }
 
@@ -65,6 +67,7 @@ const bookingLinks = [
 
 export default function Sidebar({ currentFilter, bookingCounts, onNavigate }: SidebarProps) {
     const router = useRouter();
+    const pathname = usePathname();
     const [showConfirm, setShowConfirm] = useState(false);
     const [theme, setTheme] = useState<"light" | "dark">("light");
 
@@ -73,8 +76,12 @@ export default function Sidebar({ currentFilter, bookingCounts, onNavigate }: Si
         const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const finalTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
 
-        setTheme(finalTheme);
-        document.documentElement.classList.toggle("dark", finalTheme === "dark");
+        const timeout = window.setTimeout(() => {
+            setTheme(finalTheme);
+            document.documentElement.classList.toggle("dark", finalTheme === "dark");
+        }, 0);
+
+        return () => window.clearTimeout(timeout);
     }, []);
 
     const toggleTheme = () => {
@@ -103,7 +110,7 @@ export default function Sidebar({ currentFilter, bookingCounts, onNavigate }: Si
                     </div>
                     <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-foreground">Admin Dashboard</p>
-                        <p className="truncate text-xs text-muted-foreground">Rainforest Automotive</p>
+                        <p className="truncate text-xs text-muted-foreground">Rainforest21 Automotive</p>
                     </div>
                 </Link>
 
@@ -113,8 +120,8 @@ export default function Sidebar({ currentFilter, bookingCounts, onNavigate }: Si
                     </div>
                     <nav className="space-y-1">
                         {bookingLinks.map(({ href, label, filter, icon: Icon }) => {
-                            const isActive = currentFilter === filter;
-                            const count = bookingCounts[filter];
+                            const isActive = pathname === "/admin/dashboard" && currentFilter === filter;
+                            const count = bookingCounts?.[filter];
 
                             return (
                                 <Link
@@ -130,19 +137,55 @@ export default function Sidebar({ currentFilter, bookingCounts, onNavigate }: Si
                                 >
                                     <Icon className="h-4 w-4 shrink-0" />
                                     <span className="truncate">{label}</span>
-                                    <span
-                                        className={cn(
-                                            "ml-auto inline-flex min-w-8 items-center justify-center rounded-full px-2 py-1 text-xs font-semibold",
-                                            isActive
-                                                ? "bg-primary-foreground/16 text-primary-foreground"
-                                                : "bg-muted text-foreground"
-                                        )}
-                                    >
-                                        {count}
-                                    </span>
+                                    {typeof count === "number" && (
+                                        <span
+                                            className={cn(
+                                                "ml-auto inline-flex min-w-8 items-center justify-center rounded-full px-2 py-1 text-xs font-semibold",
+                                                isActive
+                                                    ? "bg-primary-foreground/16 text-primary-foreground"
+                                                    : "bg-muted text-foreground"
+                                            )}
+                                        >
+                                            {count}
+                                        </span>
+                                    )}
                                 </Link>
                             );
                         })}
+                    </nav>
+                </div>
+
+                <div className="space-y-3">
+                    <div className="px-3 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        Workshop
+                    </div>
+                    <nav className="space-y-1">
+                        <Link
+                            href="/admin/inspections/new"
+                            onClick={onNavigate}
+                            className={cn(
+                                "flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
+                                pathname === "/admin/inspections/new"
+                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                            )}
+                        >
+                            <ClipboardPlus className="h-4 w-4 shrink-0" />
+                            <span>New Inspection</span>
+                        </Link>
+                        <Link
+                            href="/admin/inspections"
+                            onClick={onNavigate}
+                            className={cn(
+                                "flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
+                                pathname === "/admin/inspections" || (/^\/admin\/inspections\/.+/.test(pathname) && pathname !== "/admin/inspections/new")
+                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                            )}
+                        >
+                            <ClipboardCheck className="h-4 w-4 shrink-0" />
+                            <span>Inspection Records</span>
+                        </Link>
                     </nav>
                 </div>
 

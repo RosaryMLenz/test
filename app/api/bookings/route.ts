@@ -1,7 +1,6 @@
 import { getPrisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { checkAdminSession } from "@/lib/auth/checkAdminSession";
-import { getBookings } from "@/lib/actions/getBookings";
 
 export async function GET(request: Request) {
     try {
@@ -27,7 +26,10 @@ export async function GET(request: Request) {
                 );
             }
 
-            const bookings = await getBookings(); // ✅ REUSING
+            const prisma = getPrisma();
+            const bookings = await prisma.booking.findMany({
+                orderBy: { createdAt: "desc" },
+            });
             return NextResponse.json({ bookings, count: bookings.length });
         }
     } catch (error) {

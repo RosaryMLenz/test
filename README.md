@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rainforest21 Automotive
 
-## Getting Started
+Rainforest21 Automotive is a Next.js application for the public shop website and its protected administration tools. The admin area manages appointments and digital vehicle inspections, including drafts, printable PDFs, and automatically generated repair-order numbers.
 
-First, run the development server:
+## Local setup
+
+Requirements:
+
+- Node.js 20.19 or newer
+- npm
+- A PostgreSQL database
+
+Install and configure the project:
 
 ```bash
+npm install
+cp .env.example .env.local
+npm run db:migrate:deploy
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`. Environment values belong in `.env.local`; real credentials must never be committed.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application uses PostgreSQL through Prisma. `DATABASE_URL` is used by the running application. `DATABASE_URL_UNPOOLED` is preferred for migrations when the database provider supplies it.
 
-## Learn More
+Both GitHub repositories contain application source only. To use the same customer records, each deployment must be configured with the same approved database URLs. Copying or cloning the repository does not copy the database.
 
-To learn more about Next.js, take a look at the following resources:
+Use `sslmode=verify-full` in PostgreSQL connection strings so the server certificate and hostname are verified. If your database provider supplies a different connection-string format, follow its current TLS guidance.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Useful commands:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run db:migrate:status
+npm run db:migrate:deploy
+npm run db:studio
+```
 
-## Deploy on Vercel
+To create or reset an administrator, set `ADMIN_SEED_NAME`, `ADMIN_SEED_EMAIL`, and a password of at least 12 characters in `.env.local`, then run:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run db:seed-admin
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Validation
+
+Run these checks before publishing:
+
+```bash
+npm run lint
+npm audit --omit=dev
+npm run build:cloudflare
+```
+
+The Cloudflare build produces the deployable OpenNext bundle used by the private Sites deployment.

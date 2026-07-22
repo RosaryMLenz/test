@@ -77,12 +77,12 @@ export async function POST(req: Request): Promise<NextResponse> {
                 const resend = new Resend(process.env.RESEND_API_KEY);
 
                 await resend.emails.send({
-                    from: 'Rainforest Automotive <onboarding@resend.dev>',
+                    from: 'Rainforest21 Automotive <onboarding@resend.dev>',
                     to: bookingData.email,
-                    subject: 'Booking Confirmation - Rainforest Automotive',
+                    subject: 'Booking Confirmation - Rainforest21 Automotive',
                     html: `
                         <h2>Booking Confirmation</h2>
-                        <p>Thank you for booking with Rainforest Automotive. Here are your details:</p>
+                        <p>Thank you for booking with Rainforest21 Automotive. Here are your details:</p>
                         <ul>
                             <li><strong>Name:</strong> ${bookingData.name}</li>
                             <li><strong>Email:</strong> ${bookingData.email}</li>
@@ -104,9 +104,9 @@ export async function POST(req: Request): Promise<NextResponse> {
 
                 if (process.env.ADMIN_NOTIFICATION_EMAIL) {
                     await resend.emails.send({
-                        from: 'Rainforest Automotive <onboarding@resend.dev>',
+                        from: 'Rainforest21 Automotive <onboarding@resend.dev>',
                         to: process.env.ADMIN_NOTIFICATION_EMAIL,
-                        subject: 'New Booking Notification - Rainforest Automotive',
+                        subject: 'New Booking Notification - Rainforest21 Automotive',
                         html: `
                             <h2>New Booking Received.</h2>
                             <p>A new booking has been made. Here are the details:</p>

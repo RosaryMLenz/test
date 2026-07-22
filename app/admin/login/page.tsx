@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
                         Admin Login
                     </CardTitle>
                     <CardDescription>
-                        Access your Rainforest Automotive admin dashboard.
+                        Access your Rainforest21 Automotive admin dashboard.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

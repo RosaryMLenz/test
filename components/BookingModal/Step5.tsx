@@ -37,7 +37,7 @@ export default function Step5({ formData, setFormData }: StepProps) {
                 )}
             </div>
 
-            <div className="mt-6 rounded border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/30">
+            <div className="mt-6 rounded border border-[#b6c5b8] bg-[#e7ede7] p-4">
                 <h3 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
                     {language === "en" ? "Terms and Conditions" : "Términos y Condiciones"}
                 </h3>

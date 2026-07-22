@@ -1,23 +1,19 @@
-"use client";
-
-import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import ServiceDetailPage from "@/components/ServiceDetailPage";
 
 export default function Page() {
-    const { language } = useLanguage();
-
-    return (
-        <div className="min-h-[80vh] bg-white dark:bg-black text-black dark:text-white py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-                <h1 className="text-3xl sm:text-5xl font-bold mb-4 text-green-600 dark:text-green-400">
-                    {language === "en" ? "Oil Change" : "Oil Change"}
-                </h1>
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                    {language === "en"
-                        ? "More information coming soon about our oil change services."
-                        : "Próximamente más información sobre nuestros servicios de oil change."}
-                </p>
-            </div>
-        </div>
-    );
+    return <ServiceDetailPage
+        eyebrowEn="Routine maintenance"
+        eyebrowEs="Mantenimiento preventivo"
+        titleEn="Oil change"
+        titleEs="Cambio de aceite"
+        introEn="Fresh oil and a clean filter help protect your engine and keep everyday performance smooth."
+        introEs="Aceite nuevo y un filtro limpio ayudan a proteger el motor y mantener un rendimiento uniforme."
+        image="/redesign/generated/service-oil-cutout.png"
+        altEn="Motor oil and oil filter"
+        altEs="Aceite de motor y filtro de aceite"
+        includesEn={["Oil and filter replacement", "Fluid-level check", "Visual inspection for obvious leaks", "Maintenance guidance based on your vehicle"]}
+        includesEs={["Cambio de aceite y filtro", "Revisión de niveles de fluidos", "Inspección visual de fugas evidentes", "Orientación según el mantenimiento de tu vehículo"]}
+        signsEn={["Your maintenance reminder is on", "The oil looks dark or low", "The engine sounds louder than usual", "You have reached the recommended service interval"]}
+        signsEs={["Se encendió el recordatorio de mantenimiento", "El aceite se ve oscuro o bajo", "El motor suena más fuerte de lo normal", "Llegaste al intervalo recomendado de servicio"]}
+    />;
 }

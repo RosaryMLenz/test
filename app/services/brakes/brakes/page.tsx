@@ -1,23 +1,19 @@
-"use client";
-
-import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import ServiceDetailPage from "@/components/ServiceDetailPage";
 
 export default function Page() {
-    const { language } = useLanguage();
-
-    return (
-        <div className="min-h-[80vh] bg-white dark:bg-black text-black dark:text-white py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-                <h1 className="text-3xl sm:text-5xl font-bold mb-4 text-green-600 dark:text-green-400">
-                    {language === "en" ? "Brakes" : "Brakes"}
-                </h1>
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                    {language === "en"
-                        ? "More information coming soon about our brakes services."
-                        : "Próximamente más información sobre nuestros servicios de brakes."}
-                </p>
-            </div>
-        </div>
-    );
+    return <ServiceDetailPage
+        eyebrowEn="Safety and control"
+        eyebrowEs="Seguridad y control"
+        titleEn="Brake service"
+        titleEs="Servicio de frenos"
+        introEn="A careful brake inspection helps identify wear, noise, vibration, and stopping concerns before they become bigger problems."
+        introEs="Una inspección cuidadosa ayuda a detectar desgaste, ruidos, vibraciones y problemas de frenado antes de que empeoren."
+        image="/redesign/generated/service-brakes-cutout.png"
+        altEn="Brake rotor and caliper"
+        altEs="Disco y cáliper de freno"
+        includesEn={["Brake pad and rotor inspection", "Brake-fluid condition check", "Visual inspection of related hardware", "Clear explanation of recommended work"]}
+        includesEs={["Inspección de pastillas y discos", "Revisión del líquido de frenos", "Inspección visual de componentes relacionados", "Explicación clara del trabajo recomendado"]}
+        signsEn={["Squealing, grinding, or clicking", "The steering wheel shakes while braking", "The brake pedal feels soft or different", "The vehicle pulls while stopping"]}
+        signsEs={["Chirridos, rechinidos o golpeteos", "El volante vibra al frenar", "El pedal se siente blando o diferente", "El vehículo se desvía al detenerse"]}
+    />;
 }

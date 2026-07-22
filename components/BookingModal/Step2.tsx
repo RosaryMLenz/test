@@ -72,13 +72,13 @@ export default function Step2({ formData, setFormData }: StepProps) {
                                 className={cn(
                                     "flex items-center rounded-lg border p-3 cursor-pointer transition select-none",
                                     isSelected
-                                        ? "border-blue-600 bg-blue-50 dark:bg-blue-900 dark:border-blue-500"
+                                        ? "border-[#17643f] bg-[#e5ece6]"
                                         : "border-gray-300 hover:bg-gray-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
                                 )}
                             >
                                 <div className={cn(
                                     "flex-shrink-0 w-12 h-12 flex items-center justify-center",
-                                    key === "Car Problems" ? "text-red-600" : "text-blue-600"
+                                    key === "Car Problems" ? "text-red-600" : "text-[#17643f]"
                                 )}>
                                     <Icon size={28} />
                                 </div>
@@ -108,13 +108,13 @@ export default function Step2({ formData, setFormData }: StepProps) {
                                 className={cn(
                                     "flex items-center rounded-lg border p-3 cursor-pointer transition select-none",
                                     isSelected
-                                        ? "border-blue-600 bg-blue-50 dark:bg-blue-900 dark:border-blue-500"
+                                        ? "border-[#17643f] bg-[#e5ece6]"
                                         : "border-gray-300 hover:bg-gray-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
                                 )}
                             >
                                 <div className={cn(
                                     "flex-shrink-0 w-12 h-12 flex items-center justify-center",
-                                    key === "Car Problems" ? "text-red-600" : "text-blue-600"
+                                    key === "Car Problems" ? "text-red-600" : "text-[#17643f]"
                                 )}>
                                     <Icon size={28} />
                                 </div>

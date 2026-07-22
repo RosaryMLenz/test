@@ -197,7 +197,7 @@ export default function Step4({ formData, setFormData }: StepProps) {
                                     isPast || isSunday
                                         ? "line-through text-gray-400 cursor-not-allowed"
                                         : "hover:bg-gray-200 dark:hover:bg-neutral-800",
-                                    isSelected && "bg-blue-500 text-white hover:bg-blue-600"
+                                    isSelected && "bg-[#17643f] text-white hover:bg-[#0f4d30]"
                                 )}
                             >
                                 {date.date()}
@@ -233,7 +233,7 @@ export default function Step4({ formData, setFormData }: StepProps) {
                                             isBooked || isDisabledByTime
                                                 ? "bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-400"
                                                 : isSelected
-                                                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                                                    ? "bg-[#17643f] text-white hover:bg-[#0f4d30]"
                                                     : "bg-gray-100 dark:bg-neutral-800 hover:bg-gray-200 dark:hover:bg-neutral-700"
                                         )}
                                     >

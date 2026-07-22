@@ -174,37 +174,46 @@ export default function ServicesPage() {
   const { language } = useLanguage();
 
   return (
-      <div className="min-h-[90vh] bg-white dark:bg-black text-black dark:text-white py-10 px-6">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl sm:text-5xl font-bold text-center mb-12 text-green-600 dark:text-green-400">
-            {language === "en" ? "Our Services" : "Nuestros Servicios"}
-          </h1>
+      <div className="min-h-[90vh] bg-[#f7f4ec] text-[#111915]">
+        <div className="border-b border-[#cbd2cb] px-5 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-[92rem]">
+            <div className="rf-kicker">{language === "en" ? "What we do" : "Lo que hacemos"}</div>
+            <h1 className="mt-7 max-w-5xl break-words font-display text-[clamp(3.35rem,14vw,6.7rem)] uppercase leading-[0.88] tracking-[-0.035em]">
+              {language === "en" ? "Repairs and maintenance, explained clearly." : "Reparación y mantenimiento, explicados con claridad."}
+            </h1>
+            <p className="mt-7 max-w-2xl text-xl leading-8 text-[#4b554e]">
+              {language === "en" ? "Browse our service categories, then tell us what your vehicle needs—or what you’re noticing." : "Explora nuestras categorías y cuéntanos qué necesita tu vehículo o qué estás notando."}
+            </p>
+          </div>
+        </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto max-w-[92rem] px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
             {services.map(({ category, links }) => (
                 <Card
                     key={language === "en" ? category.en : category.es}
-                    className="flex flex-col justify-items-start border border-neutral-200 dark:border-neutral-800 hover:shadow-md transition-shadow"
+                    className="flex flex-col justify-items-start gap-4 rounded-xl border border-[#b9c4bc] bg-[#fbf9f3] py-5 shadow-none transition duration-200 hover:-translate-y-1 hover:border-[#17643f] hover:shadow-[0_18px_45px_rgba(16,23,19,0.08)] sm:gap-6 sm:rounded-2xl sm:py-6"
                 >
-                  <CardHeader>
-                    <CardTitle className="text-xl text-green-600 dark:text-green-400">
+                  <CardHeader className="px-5 sm:px-6">
+                    <CardTitle className="font-display text-2xl uppercase tracking-wide text-[#17643f] sm:text-3xl">
                       {language === "en" ? category.en : category.es}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-4">
+                  <CardContent className="px-5 sm:px-6">
+                    <ul className="space-y-3 sm:space-y-4">
                       {links.map(({ href, label, icon: Icon, description }) => (
                           <li key={href}>
                             <Link
                                 href={href}
                                 className="flex items-start gap-3 group"
                             >
-                              <Icon className="w-5 h-5 mt-1 text-green-500 dark:text-green-400 flex-shrink-0" />
+                              <Icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#17643f] sm:mt-1 sm:h-5 sm:w-5" />
                               <div>
-                          <span className="block font-medium text-neutral-900 dark:text-neutral-100 group-hover:underline">
+                          <span className="block font-bold text-[#111915] group-hover:text-[#17643f] group-hover:underline">
                             {language === "en" ? label.en : label.es}
                           </span>
-                                <span className="block text-sm text-neutral-600 dark:text-neutral-400">
+                                <span className="mt-1 block text-sm leading-5 text-[#5c665f] sm:leading-6">
                             {language === "en" ? description.en : description.es}
                           </span>
                               </div>

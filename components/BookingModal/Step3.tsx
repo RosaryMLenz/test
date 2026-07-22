@@ -396,7 +396,7 @@ export default function Step3({ formData, setFormData }: StepProps) {
                         className={cn(
                             "p-3 border rounded-lg cursor-pointer mb-2 transition",
                             isSelected
-                                ? "bg-blue-100 border-blue-600 dark:bg-blue-900 dark:border-blue-500"
+                                ? "border-[#17643f] bg-[#e5ece6]"
                                 : "hover:bg-gray-100 dark:hover:bg-neutral-800 border-gray-300 dark:border-neutral-700"
                         )}
                     >
